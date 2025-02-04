@@ -12,12 +12,38 @@ type JomlaFixture = {
   loginPage: LoginPage;
   loginAs: (role: UserRole) => Promise<void>;
   dashboardPage: DashboardPage;
-  communityPage: CommunityPage;
+  communityNormalUserPage: CommunityPage;
+  communitySuperAdminPage: CommunityPage;
   staffDirectoryPage: StaffDirectoryPage;
   departmentPage: DepartmentPage;
+  normalUserContext: {context: any; page: any};
+  superAdminContext: {context: any; page: any};
 }
 
 export const test = base.extend<JomlaFixture>({
+  normalUserContext: async({browser}, use) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const loginPage = new LoginPage(page);
+    await loginPage.navigateToAndVisible();
+    await loginPage.startLogin(users.testAccount.email, users.testAccount.password);
+    await use({context, page});
+    await context.close();
+  },
+
+  superAdminContext: async({browser}, use) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const loginPage = new LoginPage(page);
+    await loginPage.navigateToAndVisible();
+    await loginPage.startLogin(users.admin.email, users.admin.password);
+    await use({context, page});
+    await context.close();
+  },
+
+
+  // TODO: Check if this fixture is still needed or we can use 
+  // above user context fully
   loginAs: async ({ page }, use) => {
     await use(async (role: UserRole) => {
       const user = users[role];
@@ -37,9 +63,15 @@ export const test = base.extend<JomlaFixture>({
     await use (dashboardPage);
   },
 
-  communityPage: async ({page}, use)=> {
-    const communityPage= new CommunityPage(page);
-    await use (communityPage);
+  // browser context yawww
+  communityNormalUserPage: async ({normalUserContext}, use) => {
+    const communityPage = new CommunityPage(normalUserContext.page);
+    await use(communityPage);
+  },
+
+  communitySuperAdminPage: async ({superAdminContext}, use) => {
+    const communityPage = new CommunityPage(superAdminContext.page);
+    await use(communityPage);
   },
   
   staffDirectoryPage: async ({page}, use)=> {

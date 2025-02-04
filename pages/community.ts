@@ -3,14 +3,38 @@ import { expect, type Locator, type Page } from "@playwright/test";
 export class CommunityPage{
   readonly page: Page;
   readonly header: Locator;
+  // create community
+  readonly createCommunityBtn: Locator;
+  readonly newCommunityName: Locator;
+  readonly newCommunityStatus: Locator;
+  readonly createCommunitySaveBtn: Locator;
+
 
 
   constructor(page: Page) {
     this.page = page;
-    this.header = page.getByRole('heading', { name: 'My Wall' });
+    this.header = this.page.getByRole('heading', { name: 'Communities', exact:true });
+    // create community
+    this.createCommunityBtn = this.page.getByRole('button', { name: 'Plus icon Community' });
+    this.newCommunityName= this.page.getByRole('textbox', { name: 'Community name', exact: true });
+    this.newCommunityStatus = this.page.getByRole('combobox');
+    this.createCommunitySaveBtn = this.page.getByRole('button', { name: 'Create' });
+
   }
 
-  // search community
+  async navigateToAndVisible() {
+    await expect(this.header).toBeVisible();
+  }
+
+  async createCommunity(comName: string) {
+    await this.createCommunityBtn.click();
+    await this.newCommunityName.click();
+    await this.newCommunityName.fill(comName);
+    await this.newCommunityStatus.selectOption("public"); // this can be public or private
+    await this.createCommunitySaveBtn.click();
+  }
+
+  // search community DONE
   // create new community
   // filter community
   // delete community

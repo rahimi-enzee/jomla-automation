@@ -1,6 +1,6 @@
 import { test, expect } from "../fixtures/fixture.ts";
 
-test.describe("Test community", () => {
+test.describe("Test staff directory", () => {
     test.beforeEach(async ({loginAs, dashboardPage, staffDirectoryPage}) => {
         await loginAs("testAccount");
         await dashboardPage.staffDirectoryPageCanBeClick();
