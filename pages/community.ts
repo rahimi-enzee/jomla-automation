@@ -19,6 +19,7 @@ export class CommunityPage{
     this.newCommunityName= this.page.getByRole('textbox', { name: 'Community name', exact: true });
     this.newCommunityStatus = this.page.getByRole('combobox');
     this.createCommunitySaveBtn = this.page.getByRole('button', { name: 'Create' });
+    
 
   }
 
@@ -33,6 +34,21 @@ export class CommunityPage{
     await this.newCommunityStatus.selectOption("public"); // this can be public or private
     await this.createCommunitySaveBtn.click();
   }
+
+  async checkCommunityVisible(comName: string) {
+    await expect(this.page.getByRole('heading', { name: comName })).toBeVisible();
+
+  }
+
+  async communityDeletion(comName: string) {
+    await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByRole('button').first().click();
+    await this.page.getByRole('button', { name: 'Delete' }).click();
+    await this.page.getByRole('button', { name: 'Yes' }).click();
+  }
+
+
+  
+
 
   // search community DONE
   // create new community

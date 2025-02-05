@@ -4,11 +4,14 @@ import { DashboardPage } from "../pages/dashboard";
 import { CommunityPage } from "../pages/community";
 import { StaffDirectoryPage } from "../pages/staffDirectory";
 import { DepartmentPage } from "../pages/department";
+import { SettingsPage } from "../pages/settings";
 
 import { users } from "../data/users";
 type UserRole = keyof typeof users;
 
 type JomlaFixture = {
+  normalUserContext: {context: any; page: any};
+  superAdminContext: {context: any; page: any};
   loginPage: LoginPage;
   loginAs: (role: UserRole) => Promise<void>;
   dashboardPage: DashboardPage;
@@ -16,29 +19,32 @@ type JomlaFixture = {
   communitySuperAdminPage: CommunityPage;
   staffDirectoryPage: StaffDirectoryPage;
   departmentPage: DepartmentPage;
-  normalUserContext: {context: any; page: any};
-  superAdminContext: {context: any; page: any};
-}
+  superAdminSettingsPage: SettingsPage;
+};
 
 export const test = base.extend<JomlaFixture>({
   normalUserContext: async({browser}, use) => {
     const context = await browser.newContext();
     const page = await context.newPage();
+
     const loginPage = new LoginPage(page);
     await loginPage.navigateToAndVisible();
     await loginPage.startLogin(users.testAccount.email, users.testAccount.password);
+
     await use({context, page});
-    await context.close();
+    // await context.close();
   },
 
   superAdminContext: async({browser}, use) => {
     const context = await browser.newContext();
     const page = await context.newPage();
+
     const loginPage = new LoginPage(page);
     await loginPage.navigateToAndVisible();
     await loginPage.startLogin(users.admin.email, users.admin.password);
+
     await use({context, page});
-    await context.close();
+    // await context.close();
   },
 
 
@@ -66,13 +72,18 @@ export const test = base.extend<JomlaFixture>({
   // browser context yawww
   communityNormalUserPage: async ({normalUserContext}, use) => {
     const communityPage = new CommunityPage(normalUserContext.page);
+    const dashboardPage = new DashboardPage(normalUserContext.page);
+    await dashboardPage.communityPageCanBeClick();
     await use(communityPage);
   },
 
-  communitySuperAdminPage: async ({superAdminContext}, use) => {
-    const communityPage = new CommunityPage(superAdminContext.page);
-    await use(communityPage);
-  },
+  // TODO: we dont need this for now
+  // communitySuperAdminPage: async ({superAdminContext}, use) => {
+  //   const communityPage = new CommunityPage(superAdminContext.page);
+  //   const dashboardPage = new DashboardPage(superAdminContext.page);
+  //   await dashboardPage.communityPageCanBeClick();
+  //   await use(communityPage);
+  // },
   
   staffDirectoryPage: async ({page}, use)=> {
     const staffDirectoryPage= new StaffDirectoryPage(page);
@@ -83,6 +94,13 @@ export const test = base.extend<JomlaFixture>({
     const departmentPage= new DepartmentPage(page);
     await use (departmentPage);
   },
+
+  superAdminSettingsPage: async ({superAdminContext}, use) => {
+    const settingsPage = new SettingsPage(superAdminContext.page);
+    const dashboardPage = new DashboardPage(superAdminContext.page);
+    await dashboardPage.settingsPageCanBeClick();
+    await use(settingsPage);
+  }
   
 });
 

@@ -6,6 +6,7 @@ export class DashboardPage {
   readonly staffDirectory: Locator;
   readonly community: Locator;
   readonly department: Locator;
+  readonly settings: Locator;
 
 
   constructor(page: Page) {
@@ -14,6 +15,7 @@ export class DashboardPage {
     this.staffDirectory = page.getByRole('link', { name: 'Staff Directory Staff' })
     this.community = page.getByRole('link', { name: 'Community' });
     this.department = page.getByRole('link', { name: 'Department Department' });
+    this.settings = page.getByRole("link", {name:'Settings Settings'});
   }
 
   async navigateToAndVisible() {
@@ -30,8 +32,13 @@ export class DashboardPage {
     await this.staffDirectory.click();
   }
   // this will click the department icon and redirect to community page
-  async DepartmentPageCanBeClick() {
+  async departmentPageCanBeClick() {
     await this.department.click();
+  }
+
+  // this will clik the settings icon and redirect to settings page.
+  async settingsPageCanBeClick() {
+    await this.settings.click();
   }
 }
 
