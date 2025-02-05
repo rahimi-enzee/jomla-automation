@@ -1,5 +1,4 @@
 import { test, expect } from "../fixtures/fixture.ts";
-import { users } from "../data/users.ts";
 
 test.describe("Test community", () => {
     test("create community and super admin approve", async({communityNormalUserPage,superAdminSettingsPage}) => {
@@ -13,5 +12,11 @@ test.describe("Test community", () => {
     test("Approve deletion", async({superAdminSettingsPage}) => {
         await superAdminSettingsPage.approveCommunityDeletion("automation");
     });
+
+    test("Visit community, invite member", async({communityNormalUserPage}) => {
+        await communityNormalUserPage.visitCommunity("new com");
+        await communityNormalUserPage.inviteMember("John Doe");
+        await communityNormalUserPage.deleteMember("John Doe");
+    })
 
 })
