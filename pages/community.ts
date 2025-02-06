@@ -9,6 +9,7 @@ export class CommunityPage{
   readonly newCommunityName: Locator;
   readonly newCommunityStatus: Locator;
   readonly createCommunitySaveBtn: Locator;
+  readonly createCommunityCancelBtn: Locator;
   readonly communityPosting: Posting;
 
   constructor(page: Page) {
@@ -19,6 +20,7 @@ export class CommunityPage{
     this.newCommunityName= this.page.getByRole('textbox', { name: 'Community name', exact: true });
     this.newCommunityStatus = this.page.getByRole('combobox');
     this.createCommunitySaveBtn = this.page.getByRole('button', { name: 'Create' });
+    this.createCommunityCancelBtn = this.page.getByRole('button', { name: 'Cancel' });
     this.communityPosting = new Posting(this.page);
   }
 
@@ -36,6 +38,8 @@ export class CommunityPage{
       return;
     } else if (await this.page.getByText("A pending request for this community name already exists.").isVisible()) {
       console.log("Already in request. Skipping test");
+      this.createCommunityCancelBtn.click();
+      return;
     }
 
     await this.newCommunityStatus.selectOption("public"); // this can be public or private
@@ -48,12 +52,19 @@ export class CommunityPage{
   }
 
   async communityDeletion(comName: string) {
-    await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByRole('button').first().click();
-    await this.page.getByRole('button', { name: 'Delete' }).click();
-    await this.page.getByRole('button', { name: 'Yes' }).click();
+    if (await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByRole('button').first().isVisible()) {
+      await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByRole('button').first().click();
+      await this.page.getByRole('button', { name: 'Delete' }).click();
+      await this.page.getByRole('button', { name: 'Yes' }).click();
+    } else {
+      console.log("Request didn't exist");
+      return;
+    }
   }
 
   async visitCommunity(comName: string) {
+    // TODO: if there are two communities with the same name (for some reason)
+    // test will failed, fix this 
     await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().click();
     await expect(this.page.getByText(comName, {exact: true})).toBeVisible();
   }
@@ -77,12 +88,6 @@ export class CommunityPage{
 
     // this work for now, but it choose the first name in the search result
     await this.page.locator('div.flex.items-center.p-2.cursor-pointer').click();
-
-
-
-
-
-
 
     if (await this.page.getByText(`${memberName} is already a member`).isVisible()) {
       console.log("Member already in this community");

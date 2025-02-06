@@ -2,15 +2,15 @@ import { test, expect } from "../fixtures/fixture.ts";
 
 test.describe("Test community", () => {
     test("create community and super admin approve", async({communityNormalUserPage,superAdminSettingsPage}) => {
-        await communityNormalUserPage.createCommunity("automation");
+        await communityNormalUserPage.createCommunity("automation1");
         await superAdminSettingsPage.navigateToAndVisible();
-        await superAdminSettingsPage.approveCommunityCreation("automation");
-        await communityNormalUserPage.checkCommunityVisible("automation");
-        await communityNormalUserPage.communityDeletion("automation");
+        await superAdminSettingsPage.approveCommunityCreation("automation1");
+        await communityNormalUserPage.checkCommunityVisible("automation1");
+        await communityNormalUserPage.communityDeletion("automation1");
     });
 
     test("Approve deletion", async({superAdminSettingsPage}) => {
-        await superAdminSettingsPage.approveCommunityDeletion("automation");
+        await superAdminSettingsPage.approveCommunityDeletion("automation1");
     });
 
     test("Visit community, invite member", async({communityNormalUserPage}) => {
