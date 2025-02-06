@@ -92,6 +92,14 @@ export const test = base.extend<JomlaFixture>({
 
   departmentPage: async ({page}, use)=> {
     const departmentPage= new DepartmentPage(page);
+
+    const loginPage = new LoginPage(page);
+    await loginPage.navigateToAndVisible();
+    await loginPage.startLogin(users.testAccount.email, users.testAccount.password);
+
+    const dashboardPage = new DashboardPage(page);
+    await dashboardPage.departmentPageCanBeClick();
+
     await use (departmentPage);
   },
 

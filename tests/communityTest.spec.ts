@@ -6,6 +6,7 @@ test("Check if every pages inside Community can be click and visibility", async(
     await communityNormalUserPage.allPageCanBeClick();
 });
 
+// NOTE: this is working for +ve scenario only. careful with this timebomb
 test("Create and delete communities, with admin approval for both", async({communityNormalUserPage,superAdminSettingsPage}) => {
     // Need a way to handle this condition
     await communityNormalUserPage.createCommunity("automation1");
@@ -15,6 +16,7 @@ test("Create and delete communities, with admin approval for both", async({commu
     await communityNormalUserPage.communityDeletion("automation1");
     await superAdminSettingsPage.approveCommunityDeletion("automation1");
 });
+
 
 test("Visit community, invite member", async({communityNormalUserPage}) => {
     await communityNormalUserPage.visitCommunity("new com");
