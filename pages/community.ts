@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import { Posting } from "./components/posting";
 
 export class CommunityPage{
   readonly page: Page;
@@ -8,6 +9,7 @@ export class CommunityPage{
   readonly newCommunityName: Locator;
   readonly newCommunityStatus: Locator;
   readonly createCommunitySaveBtn: Locator;
+  readonly communityPosting: Posting;
 
   constructor(page: Page) {
     this.page = page;
@@ -17,6 +19,7 @@ export class CommunityPage{
     this.newCommunityName= this.page.getByRole('textbox', { name: 'Community name', exact: true });
     this.newCommunityStatus = this.page.getByRole('combobox');
     this.createCommunitySaveBtn = this.page.getByRole('button', { name: 'Create' });
+    this.communityPosting = new Posting(this.page);
   }
 
   async navigateToAndVisible() {
@@ -51,26 +54,37 @@ export class CommunityPage{
   }
 
   async visitCommunity(comName: string) {
-    await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').click();
-    await expect(this.page.getByText(comName)).toBeVisible();
+    await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().click();
+    await expect(this.page.getByText(comName, {exact: true})).toBeVisible();
   }
 
   async inviteMember(memberName: string) {
-    await this.page.getByText('Members').click();
+    // the idea is to invite not inside member list page
+    // because it will lead to multiple instance of name
+    // if that member already in the community
+    // await this.page.getByText('Members').click();
     await this.page.getByRole('button', { name: 'Invite' }).click();
     await this.page.getByRole('textbox', { name: 'Search name' }).fill(memberName);
 
     // this smell problem, this should be no issue if the name duplicate
     // but it will be problem if the name not duplicate,
     // add condition
-    if (await this.page.getByText(memberName).nth(1).isVisible()) {
-      await this.page.getByText(memberName).nth(1).click();
-    } else {
-      await this.page.getByText(memberName).click();
-    }
+    // if (await this.page.getByText(memberName).nth(1).isVisible()) {
+    //   await this.page.getByText(memberName).nth(1).click();
+    // } else {
+    //   await this.page.getByText(memberName).click();
+    // }
+
+    // this work for now, but it choose the first name in the search result
+    await this.page.locator('div.flex.items-center.p-2.cursor-pointer').click();
 
 
-    if (await this.page.getByText('john doe is already a member').isVisible()) {
+
+
+
+
+
+    if (await this.page.getByText(`${memberName} is already a member`).isVisible()) {
       console.log("Member already in this community");
       await this.page.getByRole('button', { name: 'Cancel' }).click();
       return;
@@ -84,11 +98,20 @@ export class CommunityPage{
 
     // await this.page.locator('div').filter({ hasText: new RegExp(`^${memberName}.*$`, 'i') }).first().getByRole('button').click();
     // This work!!!! Thank GOD I'm strugling with this locator :'(
-    await this.page.locator('div.relative.flex').filter({ hasText: new RegExp(`^${memberName}.*$`, 'i') }).locator('button:has(img[alt="Menu"])').click();
+    
+    if(await this.page.locator('div.relative.flex').filter({ hasText: new RegExp(`^${memberName}.*$`, 'i') }).locator('button:has(img[alt="Menu"])').isVisible()) {
+      await this.page.locator('div.relative.flex').filter({ hasText: new RegExp(`^${memberName}.*$`, 'i') }).locator('button:has(img[alt="Menu"])').click();
+      await this.page.getByRole('button', { name: 'Remove Remove' }).click();
+      await this.page.getByRole('button', { name: 'Yes' }).click();
+    } else {
+      console.log("Staff not in member list");
+      return;
+    }
 
-    await this.page.getByRole('button', { name: 'Remove Remove' }).click();
-    await this.page.getByRole('button', { name: 'Yes' }).click();
+   };
 
+   async sendPosting(thePost: string) {
+    await this.communityPosting.sendNormalPost(thePost);
    }
   
 
@@ -104,8 +127,8 @@ export class CommunityPage{
   // community gallery
   // community files
   // community members
-  // invite member
-  // remove member
+  // invite member DONE
+  // remove member DONE
   // assign member as admin
   // demote admin to member
 

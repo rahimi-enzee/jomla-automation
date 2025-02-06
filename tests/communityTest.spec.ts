@@ -19,4 +19,9 @@ test.describe("Test community", () => {
         await communityNormalUserPage.deleteMember("John Doe");
     })
 
+    test("Send post in community", async({communityNormalUserPage}) => {
+        await communityNormalUserPage.visitCommunity("new com");
+        await communityNormalUserPage.sendPosting("Nama saya bingo! nyiaw nyiaw");
+    })
+
 })
