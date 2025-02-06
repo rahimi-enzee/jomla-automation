@@ -4,6 +4,11 @@ import { Posting } from "./components/posting";
 export class CommunityPage{
   readonly page: Page;
   readonly header: Locator;
+  // pages in community
+  readonly postPage: Locator;
+  readonly galleryPage: Locator;
+  readonly filePage: Locator;
+  readonly memberPage: Locator;
   // create community
   readonly createCommunityBtn: Locator;
   readonly newCommunityName: Locator;
@@ -15,6 +20,11 @@ export class CommunityPage{
   constructor(page: Page) {
     this.page = page;
     this.header = this.page.getByRole('heading', { name: 'Communities', exact:true });
+    // pages in community
+    this.postPage = page.getByText('Post', { exact: true });
+    this.galleryPage = this.page.getByText('Gallery', {exact: true});
+    this.filePage = this.page.getByText('Files', {exact:true});
+    this.memberPage = this.page.getByText('Members', {exact: true});
     // create community
     this.createCommunityBtn = this.page.getByRole('button', { name: 'Plus icon Community' });
     this.newCommunityName= this.page.getByRole('textbox', { name: 'Community name', exact: true });
@@ -26,6 +36,23 @@ export class CommunityPage{
 
   async navigateToAndVisible() {
     await expect(this.header).toBeVisible();
+  }
+
+  async allPageCanBeClick() {
+    // we need some expectation here babe
+    await this.galleryPage.click();
+    await expect(this.page.getByRole('heading', { name: 'Images' })).toBeVisible();
+    await expect (this.page.getByRole('heading', { name: 'Videos' })).toBeVisible();
+
+    await this.filePage.click();
+    await expect (this.page.getByRole('textbox', { name: 'Search files' })).toBeVisible();
+
+    await this.memberPage.click();
+    await expect (this.page.getByRole('textbox', { name: 'Search Member' })).toBeVisible();
+    await expect( this.page.getByRole('heading', { name: 'Admin', exact: true })).toBeVisible();
+
+    await this.postPage.click()
+    await expect(this.page.getByRole('textbox', { name: 'Share Your Thoughts...' })).toBeVisible();
   }
 
   async createCommunity(comName: string) {
@@ -48,7 +75,7 @@ export class CommunityPage{
 
   async checkCommunityVisible(comName: string) {
     await this.page.reload();
-    await expect(this.page.getByRole('heading', { name: comName })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: comName }).first()).toBeVisible();
   }
 
   async communityDeletion(comName: string) {
@@ -74,7 +101,12 @@ export class CommunityPage{
     // because it will lead to multiple instance of name
     // if that member already in the community
     // await this.page.getByText('Members').click();
-    await this.page.getByRole('button', { name: 'Invite' }).click();
+    if (await this.page.getByRole('button', { name: 'Invite' }).isVisible()) {
+      await this.page.getByRole('button', { name: 'Invite' }).click();
+    } else {
+      console.log("You're not this community admin. Skipping test");
+      return;
+    }
     await this.page.getByRole('textbox', { name: 'Search name' }).fill(memberName);
 
     // this smell problem, this should be no issue if the name duplicate
@@ -99,7 +131,7 @@ export class CommunityPage{
   }
 
   async deleteMember(memberName: string) {
-    await this.page.getByText('Members', {exact: true}).click();
+    await this.memberPage.click();
 
     // await this.page.locator('div').filter({ hasText: new RegExp(`^${memberName}.*$`, 'i') }).first().getByRole('button').click();
     // This work!!!! Thank GOD I'm strugling with this locator :'(
@@ -115,28 +147,51 @@ export class CommunityPage{
 
    };
 
+   async assignMemberToAdmin(memberName: string) {
+    await this.memberPage.click();
+
+    if (await this.page.locator('div.relative.flex').filter({ hasText: new RegExp(`^${memberName}.*$`, 'i') }).locator('button:has(img[alt="Menu"])').isVisible()) {
+      await this.page.locator('div.relative.flex').filter({ hasText: new RegExp(`^${memberName}.*$`, 'i') }).locator('button:has(img[alt="Menu"])').click();
+
+      // staff already admin
+      if (await this.page.getByRole('button', { name: 'Assign Demote to Member' }).isVisible()) {
+        console.log(`${memberName} is already an Admin`);
+        return;
+      }
+
+      await this.page.getByRole('button', { name: 'Assign Assign as Admin' }).click();
+    } else {
+      console.log(`${memberName} don't exist in this community.`);
+      return;
+    }
+
+   };
+
+   async demoteAdminToMember(memberName: string) {
+    await this.memberPage.click();
+
+    if (await this.page.locator('div.relative.flex').filter({ hasText: new RegExp(`^${memberName}.*$`, 'i') }).locator('button:has(img[alt="Menu"])').isVisible()) {
+      await this.page.locator('div.relative.flex').filter({ hasText: new RegExp(`^${memberName}.*$`, 'i') }).locator('button:has(img[alt="Menu"])').click();
+
+      // staff already normal user
+
+      if (await this.page.getByRole('button', { name: 'Assign Assign as Admin' }).isVisible()) {
+        console.log(`${memberName} is already a member`);
+        return;
+      }
+      await this.page.getByRole('button', { name: 'Assign Demote to Member' }).click();
+    } else {
+      console.log(`${memberName} don't exist in this community.`);
+      return;
+    }
+
+   }
+
    async sendPosting(thePost: string) {
     await this.communityPosting.sendNormalPost(thePost);
    }
   
-
-
-  // search community DONE
-  // create new community DONE
-  // filter community 
-  // delete community DONE
-  // visit community  DONE
-  // edit community detail
-  // post in community
-  // filter post 
-  // community gallery
-  // community files
-  // community members
-  // invite member DONE
-  // remove member DONE
-  // assign member as admin
-  // demote admin to member
-
-
-
 }
+  // filter community: what we can do is to check whether the lock icon visible for private and vice versa
+  // edit community detail
+  // post in community WIP

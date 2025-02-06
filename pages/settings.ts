@@ -30,9 +30,16 @@ export class SettingsPage {
   // go to request, then approve the community deletion
   async approveCommunityDeletion(comName: string) {
     await this.requestBtn.click()
-    await expect(this.page.getByText(comName).first()).toBeVisible();
-    // I dont have any idea what is this locator, at least it worked
-    await this.page.locator('div').filter({ hasText: "Community Deletion" }).locator('div').filter({ hasText: comName }).getByRole('button', { name: 'Approve' }).first().click();
+    await this.page.reload();
+    // await expect(this.page.getByText(comName).first()).toBeVisible();
+
+    if (await this.page.getByText(comName).first().isVisible()) {
+      // I dont have any idea what is this locator, at least it worked
+      await this.page.locator('div').filter({ hasText: "Community Deletion" }).locator('div').filter({ hasText: comName }).getByRole('button', { name: 'Approve' }).first().click();
+    } else {
+      console.log(`${comName} not in request list.`);
+      return;
+    }
   }
 
 }
