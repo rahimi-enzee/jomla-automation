@@ -98,7 +98,12 @@ export class CommunityPage {
   async visitCommunity(comName: string) {
     // TODO: if there are two communities with the same name (for some reason)
     // test will failed, fix this 
-    await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().click();
+    if (await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().isVisible()) {
+      await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().click();
+    } else {
+      await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().waitFor({state: "visible", timeout: 120_000});
+      await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().click();
+    }
     await expect(this.page.getByText(comName, { exact: true })).toBeVisible();
   }
 

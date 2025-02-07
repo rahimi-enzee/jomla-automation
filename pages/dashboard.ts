@@ -1,7 +1,12 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import { DepartmentPage } from "./department";
+import { CommunityPage } from "./community";
 
 export class DashboardPage {
   readonly page: Page;
+  readonly departmentPage: DepartmentPage;
+  readonly communityPage: CommunityPage;
+
   readonly header: Locator;
   readonly dashboard: Locator;
   readonly staffDirectory: Locator;
@@ -17,8 +22,10 @@ export class DashboardPage {
 
   constructor(page: Page) {
     this.page = page;
+    this.departmentPage = new DepartmentPage(page);
+    this.communityPage = new CommunityPage(page);
+
     this.header = page.getByRole('heading', { name: 'My Wall' });
-    
     this.staffDirectory = page.getByRole('link', { name: 'Staff Directory Staff' })
     this.community = page.getByRole('link', { name: 'Community' });
     this.department = page.getByRole('link', { name: 'Department Department' });
@@ -28,7 +35,7 @@ export class DashboardPage {
     this.fileManagement = this.page.getByRole('link', { name: 'File Management File' });
     this.media = page.getByRole('link', { name: 'Media Media' });
     this.linkHome = page.getByRole('link', { name: 'Link Link' });
-  }
+  };
 
   async navigateToAndVisible() {
     // await this.page.goto("/dashboard"); // there's no need for this, because of auto redirect
@@ -56,6 +63,8 @@ export class DashboardPage {
     await this.community.click();
     await expect(this.page.getByRole('heading', { name: 'Search Communities' })).toBeVisible();
     await expect(this.page.getByText('All', { exact: true })).toBeVisible();
+    await this.communityPage.visitCommunity("new com");
+    await this.communityPage.allPageCanBeClick();
   };
 
   async staffDirectoryPageCanBeClick() {
@@ -67,6 +76,8 @@ export class DashboardPage {
   async departmentPageCanBeClick() {
     await this.department.click();
     await expect(this.page.getByRole('heading', { name: 'Department', exact: true })).toBeVisible();
+    await this.departmentPage.visitDepartment("new department");
+    await this.communityPage.allPageCanBeClick();
   };
 
   async fileManagementPageCanBeClick() {
