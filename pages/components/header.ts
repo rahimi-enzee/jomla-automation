@@ -7,6 +7,8 @@ export class Headers {
   readonly galleryPage: Locator;
   readonly filePage: Locator;
   readonly memberPage: Locator;
+  readonly activities: Locator;
+  readonly bio: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -14,22 +16,59 @@ export class Headers {
     this.galleryPage = this.page.getByText('Gallery', { exact: true });
     this.filePage = this.page.getByText('Files', { exact: true });
     this.memberPage = this.page.getByText('Members', { exact: true });
-  }
+    this.bio= this.page.getByText("Bio", {exact: true});
+    this.activities= this.page.getByText('Activities', {exact: true});
+  };
 
-  async goToEachPages() {
+  async galleryCanBeclick() {
     await this.galleryPage.click();
     await expect(this.page.getByRole('heading', { name: 'Images' })).toBeVisible();
     await expect(this.page.getByRole('heading', { name: 'Videos' })).toBeVisible();
+  };
 
+  async filePageCanBeClick() {
     await this.filePage.click();
     await expect(this.page.getByRole('textbox', { name: 'Search files' })).toBeVisible();
+  };
 
+  async memberPageCanBeClick() {
     await this.memberPage.click();
     await expect(this.page.getByRole('textbox', { name: 'Search Member' })).toBeVisible();
     await expect(this.page.getByRole('heading', { name: 'Admin', exact: true })).toBeVisible();
+  };
 
+  async postPageCanBeClick() {
     await this.postPage.click()
     await expect(this.page.getByRole('textbox', { name: 'Share Your Thoughts...' })).toBeVisible();
+  };
+
+  async activitiesCanBeClick() {
+    await this.activities.click();
+    await expect(this.page.getByRole('textbox', { name: 'Share Your Thoughts...' })).toBeVisible();
+    await expect(this.page.getByText('All posts')).toBeVisible();
+  };
+
+  async bioCanBeClick() {
+    await this.bio.click();
+    await expect(this.page.getByText('Bio Information')).toBeVisible();
+    await expect(this.page.getByRole('cell', { name: 'Date of Birth' })).toBeVisible();
+  };
+
+  // this is for department and communities
+  async goToEachPages() {
+    await this.galleryCanBeclick();
+    await this.filePageCanBeClick();
+    await this.memberPageCanBeClick();
+    await this.postPageCanBeClick();
+  };
+
+  // this is for bio/profile
+  // activities, bio, gallery, file
+  async profileCanGoToEachPages() {
+    await this.galleryCanBeclick();
+    await this.filePageCanBeClick();
+    await this.bioCanBeClick();
+    await this.activitiesCanBeClick();
   }
 
 }

@@ -6,12 +6,6 @@ export class CommunityPage {
   readonly page: Page;
   readonly header: Locator;
   readonly headerPage:Headers;
-  // // pages in community
-  // readonly postPage: Locator;
-  // readonly galleryPage: Locator;
-  // readonly filePage: Locator;
-  // readonly memberPage: Locator;
-  // create community
   readonly createCommunityBtn: Locator;
   readonly newCommunityName: Locator;
   readonly newCommunityStatus: Locator;
@@ -23,12 +17,6 @@ export class CommunityPage {
     this.page = page;
     this.header = this.page.getByRole('heading', { name: 'Communities', exact: true });
     this.headerPage = new Headers(page);
-    // pages in community
-    // this.postPage = page.getByText('Post', { exact: true });
-    // this.galleryPage = this.page.getByText('Gallery', { exact: true });
-    // this.filePage = this.page.getByText('Files', { exact: true });
-    // this.memberPage = this.page.getByText('Members', { exact: true });
-    // create community
     this.createCommunityBtn = this.page.getByRole('button', { name: 'Plus icon Community' });
     this.newCommunityName = this.page.getByRole('textbox', { name: 'Community name', exact: true });
     this.newCommunityStatus = this.page.getByRole('combobox');
@@ -41,22 +29,6 @@ export class CommunityPage {
     await expect(this.header).toBeVisible();
   }
 
-  // async allPageCanBeClick() {
-  //   // we need some expectation here babe
-  //   await this.galleryPage.click();
-  //   await expect(this.page.getByRole('heading', { name: 'Images' })).toBeVisible();
-  //   await expect (this.page.getByRole('heading', { name: 'Videos' })).toBeVisible();
-  //
-  //   await this.filePage.click();
-  //   await expect (this.page.getByRole('textbox', { name: 'Search files' })).toBeVisible();
-  //
-  //   await this.memberPage.click();
-  //   await expect (this.page.getByRole('textbox', { name: 'Search Member' })).toBeVisible();
-  //   await expect( this.page.getByRole('heading', { name: 'Admin', exact: true })).toBeVisible();
-  //
-  //   await this.postPage.click()
-  //   await expect(this.page.getByRole('textbox', { name: 'Share Your Thoughts...' })).toBeVisible();
-  // }
   async allPageCanBeClick() {
     await this.headerPage.goToEachPages();
   }

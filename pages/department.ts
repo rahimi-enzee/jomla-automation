@@ -3,14 +3,17 @@ import { Headers } from "./components/header";
 
 export class DepartmentPage{
   readonly page: Page;
+  readonly headerTab: Headers;
+
   readonly header: Locator;
-  readonly headerPage: Headers;
+  readonly plusMemberBtn: Locator;
 
   constructor(page: Page) {
     this.page = page;
     // this.header = this.page.getByRole('heading', { name: 'Department', exact: true });
     this.header = this.page.locator('div').filter({ hasText: /^Department$/ }).nth(1);
-    this.headerPage = new Headers(page);
+    this.headerTab = new Headers(page);
+    this.plusMemberBtn = this.page.getByRole('button', { name: 'Plus icon Member' });
   };
 
   async navigateToandVisible() {
@@ -33,16 +36,20 @@ export class DepartmentPage{
     };
   }
 
-  async allPageCanBeClick() {
-    await this.headerPage.goToEachPages();
+  async addMember(memberName: string) {
+    // go to member tab
+    await this.headerTab.memberPage.click();
+    // click on +member button
+    await this.plusMemberBtn.click();
+    // search memberName
+    
+
+
   }
-  
 
 //   visit department (this should be redirect automatically if user only have 1 department) DONE
 // post in department
 // filter post
-// department gallery DONE
-// department files DONE
 // add member
 // remove member
 // assign as admin

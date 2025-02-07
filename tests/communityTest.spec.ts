@@ -1,11 +1,5 @@
 import { test, expect } from "../fixtures/fixture.ts";
 
-// THIS GOES INTO DASHBOARD TEST
-// test("Check if every pages inside Community can be click and visibility", async({communityNormalUserPage}) => {
-//     await communityNormalUserPage.visitCommunity("new com");
-//     await communityNormalUserPage.allPageCanBeClick();
-// });
-
 // NOTE: this is working for +ve scenario only. careful with this timebomb
 test("Create and delete communities, with admin approval for both", async({communityNormalUserPage,superAdminSettingsPage}) => {
     // Need a way to handle this condition
