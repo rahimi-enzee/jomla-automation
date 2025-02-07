@@ -86,10 +86,10 @@ export class DashboardPage {
     await expect(this.page.getByRole('button', { name: '+ Member' })).toBeVisible();
   };
 
-  async departmentPageCanBeClick() {
+  async departmentPageCanBeClick(departmentName: string) {
     await this.department.click();
     await expect(this.page.getByRole('heading', { name: 'Department', exact: true })).toBeVisible();
-    await this.departmentPage.visitDepartment("new department");
+    await this.departmentPage.visitDepartment(departmentName);
     await this.communityPage.allPageCanBeClick();
   };
 
@@ -132,10 +132,10 @@ export class DashboardPage {
   }
 
 
-  async allPageCanBeClick() {
+  async allPageCanBeClick(departmentName: string) {
     await this.staffDirectoryPageCanBeClick();
     await this.calendarPageCanBeClick();
-    await this.departmentPageCanBeClick();
+    await this.departmentPageCanBeClick(departmentName);
     await this.communityPageCanBeClick();
     await this.fileManagementPageCanBeClick();
     await this.mediaPageCanBeClick();

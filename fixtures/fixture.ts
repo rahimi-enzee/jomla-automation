@@ -101,7 +101,7 @@ export const test = base.extend<JomlaFixture>({
     await loginPage.startLogin(users.testAccount.email, users.testAccount.password);
 
     const dashboardPage = new DashboardPage(page);
-    await dashboardPage.departmentPageCanBeClick();
+    await dashboardPage.departmentPageCanBeClick("new department");
 
     await use(departmentPage);
   },

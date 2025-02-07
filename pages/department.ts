@@ -42,9 +42,6 @@ export class DepartmentPage{
     // click on +member button
     await this.plusMemberBtn.click();
     // search memberName
-    
-
-
   }
 
 //   visit department (this should be redirect automatically if user only have 1 department) DONE
