@@ -37,6 +37,7 @@ export class SettingsPage {
       // I dont have any idea what is this locator, at least it worked
       await this.page.locator('div').filter({ hasText: "wants to delete" }).locator('div').filter({ hasText: comName }).getByRole('button', { name: 'Approve' }).first().click();
 
+
     } else {
       console.log(`${comName} not in request list.`);
       return;

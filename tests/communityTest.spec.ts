@@ -17,6 +17,9 @@ test("Create and delete communities, with admin approval for both", async({commu
     await superAdminSettingsPage.approveCommunityDeletion("automation1");
 });
 
+test("stupid", async({superAdminSettingsPage}) => {
+    await superAdminSettingsPage.approveCommunityDeletion("automation1");
+})
 
 test("Visit community, invite member", async({communityNormalUserPage}) => {
     await communityNormalUserPage.visitCommunity("new com");

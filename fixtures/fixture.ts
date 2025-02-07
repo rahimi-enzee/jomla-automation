@@ -10,8 +10,8 @@ import { users } from "../data/users";
 type UserRole = keyof typeof users;
 
 type JomlaFixture = {
-  normalUserContext: {context: any; page: any};
-  superAdminContext: {context: any; page: any};
+  normalUserContext: { context: any; page: any };
+  superAdminContext: { context: any; page: any };
   loginPage: LoginPage;
   loginAs: (role: UserRole) => Promise<void>;
   dashboardPage: DashboardPage;
@@ -23,7 +23,7 @@ type JomlaFixture = {
 };
 
 export const test = base.extend<JomlaFixture>({
-  normalUserContext: async({browser}, use) => {
+  normalUserContext: async ({ browser }, use) => {
     const context = await browser.newContext();
     const page = await context.newPage();
 
@@ -31,11 +31,11 @@ export const test = base.extend<JomlaFixture>({
     await loginPage.navigateToAndVisible();
     await loginPage.startLogin(users.testAccount.email, users.testAccount.password);
 
-    await use({context, page});
+    await use({ context, page });
     // await context.close();
   },
 
-  superAdminContext: async({browser}, use) => {
+  superAdminContext: async ({ browser }, use) => {
     const context = await browser.newContext();
     const page = await context.newPage();
 
@@ -43,7 +43,7 @@ export const test = base.extend<JomlaFixture>({
     await loginPage.navigateToAndVisible();
     await loginPage.startLogin(users.admin.email, users.admin.password);
 
-    await use({context, page});
+    await use({ context, page });
     // await context.close();
   },
 
@@ -64,16 +64,19 @@ export const test = base.extend<JomlaFixture>({
     });
   },
 
-  dashboardPage: async ({page}, use)=> {
+  dashboardPage: async ({ page }, use) => {
     const dashboardPage = new DashboardPage(page);
-    await use (dashboardPage);
+    await use(dashboardPage);
   },
 
   // browser context yawww
-  communityNormalUserPage: async ({normalUserContext}, use) => {
+  communityNormalUserPage: async ({ normalUserContext }, use) => {
     const communityPage = new CommunityPage(normalUserContext.page);
+
+    // this is for dashboard -> clicking into related url
     const dashboardPage = new DashboardPage(normalUserContext.page);
     await dashboardPage.communityPageCanBeClick();
+
     await use(communityPage);
   },
 
@@ -84,14 +87,14 @@ export const test = base.extend<JomlaFixture>({
   //   await dashboardPage.communityPageCanBeClick();
   //   await use(communityPage);
   // },
-  
-  staffDirectoryPage: async ({page}, use)=> {
-    const staffDirectoryPage= new StaffDirectoryPage(page);
-    await use (staffDirectoryPage);
+
+  staffDirectoryPage: async ({ page }, use) => {
+    const staffDirectoryPage = new StaffDirectoryPage(page);
+    await use(staffDirectoryPage);
   },
 
-  departmentPage: async ({page}, use)=> {
-    const departmentPage= new DepartmentPage(page);
+  departmentPage: async ({ page }, use) => {
+    const departmentPage = new DepartmentPage(page);
 
     const loginPage = new LoginPage(page);
     await loginPage.navigateToAndVisible();
@@ -100,16 +103,16 @@ export const test = base.extend<JomlaFixture>({
     const dashboardPage = new DashboardPage(page);
     await dashboardPage.departmentPageCanBeClick();
 
-    await use (departmentPage);
+    await use(departmentPage);
   },
 
-  superAdminSettingsPage: async ({superAdminContext}, use) => {
+  superAdminSettingsPage: async ({ superAdminContext }, use) => {
     const settingsPage = new SettingsPage(superAdminContext.page);
     const dashboardPage = new DashboardPage(superAdminContext.page);
     await dashboardPage.settingsPageCanBeClick();
     await use(settingsPage);
   }
-  
+
 });
 
 export { expect };

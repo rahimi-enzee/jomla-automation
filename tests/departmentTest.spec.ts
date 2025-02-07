@@ -1,5 +1,7 @@
 import { test, expect } from "../fixtures/fixture.ts";
 
-test("first test", async({departmentPage}) => {
+test("test all pages in department can be click", async({departmentPage}) => {
     await departmentPage.navigateToandVisible();
+    await departmentPage.visitDepartment("tester departmentss");
+    await departmentPage.allPageCanBeClick();
 });
