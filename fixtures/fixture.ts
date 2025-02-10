@@ -14,6 +14,7 @@ type JomlaFixture = {
   superAdminContext: { context: any; page: any };
   loginPage: LoginPage;
   loginAs: (role: UserRole) => Promise<void>;
+  loginAsNew: (role: UserRole) => Promise<void>;
   dashboardPage: DashboardPage;
   communityNormalUserPage: CommunityPage;
   communitySuperAdminPage: CommunityPage;
@@ -61,6 +62,19 @@ export const test = base.extend<JomlaFixture>({
       const loginPage = new LoginPage(page);
       await loginPage.navigateToAndVisible();
       await loginPage.startLogin(user.email, user.password);
+    });
+  },
+
+  loginAsNew: async ({ page }, use) => {
+    await use(async (role: UserRole) => {
+      const user = users[role];
+
+      if (!user) {
+        throw new Error("Invalid account");
+      }
+
+      const loginPage = new LoginPage(page);
+      await loginPage.startNewLogin(user.email, user.password);
     });
   },
 
