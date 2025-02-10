@@ -86,8 +86,12 @@ export class DashboardPage {
 
     // handle if staff doesnt have any department
     if (await this.page.getByRole('button', { name: 'Visit Department' }).isVisible()) {
-      await expect(this.page.getByRole('button', { name: 'Visit Department' })).toBeVisible();
-    } else {
+      console.log("Visit Department button is visible.");
+    } else if (await this.page.getByRole('button', { name: "Visit Department" }).isHidden()) {
+      await this.page.getByRole("button", { name: "Visit Department" }).waitFor({ state: "visible", timeout: 120_000 });
+      console.log("Visit Department button is visible but very flaky...")
+    }
+    else {
       console.log("NOTE: Staff not in any department. Skipping test...");
       return;
     };

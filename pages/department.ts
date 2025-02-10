@@ -33,9 +33,9 @@ export class DepartmentPage {
       await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').click();
 
       // this else if is stupid fix, but its working for now
-      // } else if (await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').isHidden()) {
-      //   await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').waitFor({ state: "visible", timeout: 120_000 });
-      //   await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').click();
+    } else if (await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').isHidden()) {
+      await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').waitFor({ state: "visible", timeout: 120_000 });
+      await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').click();
     } else {
       console.log("NOTE: Skipping test.");
       return;
