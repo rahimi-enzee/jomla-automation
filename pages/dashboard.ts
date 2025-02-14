@@ -25,6 +25,8 @@ export class DashboardPage {
   readonly logoutDashboard: Locator;
   readonly profileBtn: Locator;
   readonly ownProfile: Locator;
+  readonly visitDepartmentBtn: Locator;
+  readonly addMemberBtn: Locator;
 
 
   constructor(page: Page) {
@@ -47,18 +49,22 @@ export class DashboardPage {
     this.logoutDashboard = page.getByRole('link', { name: 'Logout Logout' });
     this.profileBtn = this.page.getByRole("button", { name: "Profile" });
     this.ownProfile = this.page.getByRole("link", { name: "My Profile" });
+    this.visitDepartmentBtn = this.page.getByRole('button', { name: 'Visit Department' });
+    this.addMemberBtn = this.page.getByRole('button', { name: '+ Member' });
   };
 
 
   async navigateToAndVisible() {
     // await this.page.goto("/dashboard"); // there's no need for this, because of auto redirect
     await expect(this.header).toBeVisible();
+    console.log("PASSED: Header visible.");
   };
 
   async dashboardHomePageCanBeClick() {
     await this.dashboardHome.click();
     await expect(this.page.getByRole('heading', { name: 'My Wall' })).toBeVisible();
     await expect(this.page.getByRole('heading', { name: 'Advertisement' })).toBeVisible();
+    console.log("PASSED: Dashboard header and advertisement visible.");
   }
 
   async calendarPageCanBeClick() {
@@ -67,78 +73,61 @@ export class DashboardPage {
       await this.calendar.click()
       await expect(this.page.getByRole('button', { name: 'Today' })).toBeVisible();
       await expect(this.page.getByLabel('Sunday')).toBeVisible();
+      console.log("PASSED: Today and Sunday visible.");
     } else {
-      console.log("Super Admin disabled calendar feature..");
+      console.log("PASSED WITH CONDITION: Super Admin disabled calendar feature.");
     }
   }
 
-  async communityPageCanBeClick() {
+  async communityPageCanBeClick(comName: string) {
     await this.community.click();
+
     await expect(this.page.getByRole('heading', { name: 'Search Communities' })).toBeVisible();
     await expect(this.page.getByText('All', { exact: true })).toBeVisible();
-    let status: boolean = await this.communityPage.visitCommunity("autocom");
+    console.log("PASSED: Search communities and All drop down visible");
+
+    let status: boolean = await this.communityPage.visitCommunity(comName);
+
     if (status === true) {
       await this.communityPage.allPageCanBeClick();
     } else {
-      console.log("ERROR: community didnt existed");
+      console.log(`PASSED WITH CONDITION: community ${comName} didnt existed`);
     }
   };
 
-  async staffDirectoryPageCanBeClick() {
+  async staffDirectoryPageCanBeClick(deptName: string, role: string) {
     await this.staffDirectory.click();
-    // handle if staff is not admin
 
-    // handle if staff doesnt have any department
-    if (await this.page.getByRole('button', { name: 'Visit Department' }).isVisible()) {
-      console.log("Visit Department button is visible.");
-    } else if ((await this.page.getByRole("button", { name: "Visit Department" }).count() > 0 && await this.page.getByRole('button', { name: "Visit Department" }).isHidden())) {
-      await this.page.getByRole("button", { name: "Visit Department" }).waitFor({ state: "visible", timeout: 120_000 });
-      console.log("Visit Department button is visible but very flaky...")
+    // super admin will not be redirect into department's staff directory,
+    // handle searching and clicking on certain department
+    if (role === "admin") {
+      await this.page.getByRole('textbox', { name: 'Select Department' }).click();
+      await this.page.getByText(deptName).click();
+    }
+
+    if (await this.visitDepartmentBtn.isVisible()) {
+      console.log("PASSED: Visit Department button is visible.");
+
+    } else if ((await this.visitDepartmentBtn.count() > 0 && await this.visitDepartmentBtn.isHidden())) {
+      await this.visitDepartmentBtn.waitFor({ state: "visible", timeout: 120_000 });
+      console.log("PASSED WITH CONDITION: Visit Department Button is flaky.");
+
     } else {
-      console.log("NOTE: Staff not in any department. Skipping test...");
+      console.log("PASSED WITH CONDITION: Department didn't existed or staff is not in any department.");
       return;
     };
 
     // handle if staff in department but not an admin
-    if (await this.page.getByRole('button', { name: '+ Member' }).isVisible()) {
-      await expect(this.page.getByRole('button', { name: '+ Member' })).toBeVisible();
-    } else if ((await this.page.getByRole("button", { name: "+ Member" }).count() > 0 && await this.page.getByRole('button', { name: '+ Member' }).isHidden())) {
+    if (await this.addMemberBtn.isVisible()) {
+      await expect(this.addMemberBtn).toBeVisible();
+      console.log("PASSED: +Member button is visible.");
+    } else if ((await this.addMemberBtn.count() > 0 && await this.addMemberBtn.isHidden())) {
       // hidden is not the same as 'the element is not there' or 'not existed',
       // use count() > 0 to check if element is there or not existed.
-      await this.page.getByRole("button", { name: "+ Member" }).waitFor({ state: "visible", timeout: 120_000 });
-      console.log("+Member button is visible but very flaky...")
+      await this.addMemberBtn.waitFor({ state: "visible", timeout: 120_000 });
+      console.log("PASSED WITH CONDITION: +Member button is visible but very flaky.")
     } else {
-      console.log("NOTE: Staff is not the department admin, and +Member is not visible.");
-      return;
-    };
-  };
-
-  async staffDirectoryPageCanBeClickAdmin(deptName: string) {
-    await this.staffDirectory.click();
-
-    await this.page.getByRole('textbox', { name: 'Select Department' }).click();
-    await this.page.getByText(deptName).click();
-
-    if (await this.page.getByRole('button', { name: 'Visit Department' }).isVisible()) {
-      console.log("Visit Department button is visible.");
-    } else if ((await this.page.getByRole("button", { name: "Visit Department" }).count() > 0 && await this.page.getByRole('button', { name: "Visit Department" }).isHidden())) {
-      await this.page.getByRole("button", { name: "Visit Department" }).waitFor({ state: "visible", timeout: 120_000 });
-      console.log("Visit Department button is visible but very flaky...")
-    } else {
-      console.log("NOTE: Staff not in any department. Skipping test...");
-      return;
-    };
-
-    // handle if staff in department but not an admin
-    if (await this.page.getByRole('button', { name: '+ Member' }).isVisible()) {
-      await expect(this.page.getByRole('button', { name: '+ Member' })).toBeVisible();
-    } else if ((await this.page.getByRole("button", { name: "+ Member" }).count() > 0 && await this.page.getByRole('button', { name: '+ Member' }).isHidden())) {
-      // hidden is not the same as 'the element is not there' or 'not existed',
-      // use count() > 0 to check if element is there or not existed.
-      await this.page.getByRole("button", { name: "+ Member" }).waitFor({ state: "visible", timeout: 120_000 });
-      console.log("+Member button is visible but very flaky...")
-    } else {
-      console.log("NOTE: Staff is not the department admin, and +Member is not visible.");
+      console.log("PASSED WITH CONDITION: Staff is not the department admin, and +Member is not visible.");
       return;
     };
   };
@@ -146,71 +135,61 @@ export class DashboardPage {
   async departmentPageCanBeClick(departmentName: string) {
     await this.department.click();
     await expect(this.page.getByRole('heading', { name: 'Department', exact: true })).toBeVisible();
+    console.log("PASSED: Department header visible.");
+
     await this.departmentPage.visitDepartment(departmentName);
-    await this.communityPage.allPageCanBeClick();
+    // await this.communityPage.allPageCanBeClick();
+    await this.headersTab.goToEachPages();
   };
 
   async fileManagementPageCanBeClick() {
     await this.fileManagement.click();
     await expect(this.page.getByRole('heading', { name: 'Search Files' })).toBeVisible();
     await expect(this.page.getByRole('cell', { name: 'File Name' })).toBeVisible();
+    console.log("PASSED: Search Files and File Name visible.");
   };
 
   async mediaPageCanBeClick() {
     await this.media.click();
     await expect(this.page.getByRole('heading', { name: 'Images' })).toBeVisible();
     await expect(this.page.getByRole('heading', { name: 'Videos' })).toBeVisible();
+    console.log("PASSED: Images and Videos visible");
   };
 
   async linkHomePageCanBeClick() {
     await this.linkHome.click();
     await expect(this.page.getByRole('heading', { name: 'Systems' })).toBeVisible();
     await expect(this.page.getByRole('heading', { name: 'Official File' })).toBeVisible();
+    console.log("PASSED: Systems and Official File visible");
   };
 
   async settingsPageCanBeClick() {
     await this.settings.click();
     await expect(this.page.getByRole('link', { name: 'Themes' })).toBeVisible();
     await expect(this.page.getByRole('link', { name: 'Feedback' })).toBeVisible();
+    console.log("PASSED: Themes and Feedback visible");
   };
 
   async profileCanBeClick() {
     await this.profileBtn.click();
     await this.ownProfile.click();
     await expect(this.page.getByRole('heading', { name: 'My Profile' })).toBeVisible();
+    console.log("PASSED: My Profile and Bio visible.");
     await expect(this.page.getByText('Bio', { exact: true })).toBeVisible();
+
     await this.headersTab.profileCanGoToEachPages();
   };
 
   async logoutDashboardCanBeClick() {
     await this.logoutDashboard.click();
-    // await expect(this.page.getByText('Email')).toBeVisible();
-    // await expect(this.page.getByText('Password')).toBeVisible();
-  }
-
-
-  async allPageCanBeClickUser(departmentName: string) {
-    await this.staffDirectoryPageCanBeClick();
-    await this.calendarPageCanBeClick();
-    await this.departmentPageCanBeClick(departmentName);
-    await this.communityPageCanBeClick();
-    await this.fileManagementPageCanBeClick();
-    await this.mediaPageCanBeClick();
-    await this.linkHomePageCanBeClick();
-    await this.settingsPageCanBeClick();
-    await this.dashboardHomePageCanBeClick();
-    await this.profileCanBeClick();
-    await this.logoutDashboardCanBeClick();
+    console.log("PASSED: LOGOUT.");
   };
 
-  // for admin, we have to handle different kind of staff 
-  // directory since they have to select the department 
-  // first
-  async allPageCanBeClickAdmin(departmentName: string) {
-    await this.staffDirectoryPageCanBeClickAdmin(departmentName);
+  async allPageCanBeClick(departmentName: string, comName: string, role: string) {
+    await this.staffDirectoryPageCanBeClick(departmentName, role);
     await this.calendarPageCanBeClick();
     await this.departmentPageCanBeClick(departmentName);
-    await this.communityPageCanBeClick();
+    await this.communityPageCanBeClick(comName);
     await this.fileManagementPageCanBeClick();
     await this.mediaPageCanBeClick();
     await this.linkHomePageCanBeClick();

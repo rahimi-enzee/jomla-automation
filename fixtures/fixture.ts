@@ -64,6 +64,7 @@ export const test = base.extend<JomlaFixture>({
       const loginPage = new LoginPage(page);
       await loginPage.navigateToAndVisible();
       await loginPage.startLogin(user.email, user.password);
+      console.log("PASSED: LOGIN");
     });
   },
 
@@ -135,7 +136,7 @@ export const test = base.extend<JomlaFixture>({
   },
 
   loginPage: async ({ page }, use) => {
-    const loginPage= new LoginPage(page);
+    const loginPage = new LoginPage(page);
     await use(loginPage);
   },
 

@@ -50,6 +50,13 @@ export class DepartmentPage {
   async visitDepartment(deptName: string) {
     const button = this.visitButton(deptName);
 
+    // TODO: handle that if the name of department already
+    // visible, meaning that we're already inside the department.
+    if (await this.page.locator('header').filter({ hasText: new RegExp(`^${deptName}$`) }).locator('img').first().isVisible()) {
+      console.log("PASSED: User automatically redirected into department page due to only having one depertment.");
+      return;
+    };
+
     try {
       // Wait for the button to appear, but don't fail immediately if not found
       await button.waitFor({ state: "attached", timeout: 5_000 });

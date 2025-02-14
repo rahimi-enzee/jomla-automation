@@ -7,6 +7,11 @@ export const users = {
     email: "rahimi@email.com",
     password: "123",
   },
+  fakeUser1: {
+    email: "fakeuser1@email.com",
+    password: "123",
+
+  },
   // this is for production only
   superAdmin: {
     email: "jomla_admin@tourism.gov.my",
