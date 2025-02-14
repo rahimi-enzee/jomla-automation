@@ -31,22 +31,8 @@ export class DepartmentPage {
   // helper function
   private visitButton(deptName: string) {
     return this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit');
-  }
+  };
 
-  // async visitDepartment(deptName: string) {
-  //   const button = this.visitButton(deptName);
-  //   // if button no visible -> just return
-  //   if (await button.isVisible()) {
-  //     await button.click();
-  //     // this else if is stupid fix, but its working for now
-  //   } else if ((await button.count() > 0 && await button.isHidden())) {
-  //     await button.waitFor({ state: "visible", timeout: 120_000 });
-  //     await button.click();
-  //   } else {
-  //     console.log("NOTE: Skipping visiting department test.");
-  //     return;
-  //   }
-  // };
   async visitDepartment(deptName: string) {
     const button = this.visitButton(deptName);
 
