@@ -5,6 +5,7 @@ import { CommunityPage } from "../pages/community";
 import { StaffDirectoryPage } from "../pages/staffDirectory";
 import { DepartmentPage } from "../pages/department";
 import { SettingsPage } from "../pages/settings";
+import { RegisterPage } from "../pages/register";
 
 import { users } from "../data/users";
 type UserRole = keyof typeof users;
@@ -21,6 +22,7 @@ type JomlaFixture = {
   staffDirectoryPage: StaffDirectoryPage;
   departmentPage: DepartmentPage;
   superAdminSettingsPage: SettingsPage;
+  registerPage: RegisterPage;
 };
 
 export const test = base.extend<JomlaFixture>({
@@ -125,7 +127,17 @@ export const test = base.extend<JomlaFixture>({
     const dashboardPage = new DashboardPage(superAdminContext.page);
     await dashboardPage.settingsPageCanBeClick();
     await use(settingsPage);
-  }
+  },
+
+  registerPage: async ({ page }, use) => {
+    const registerPage = new RegisterPage(page);
+    await use(registerPage);
+  },
+
+  loginPage: async ({ page }, use) => {
+    const loginPage= new LoginPage(page);
+    await use(loginPage);
+  },
 
 });
 

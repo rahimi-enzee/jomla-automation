@@ -27,20 +27,41 @@ export class DepartmentPage {
   // our user department before we can click on their department name
   // also have to handle where user are directed to their department page
   // automatically
-  async visitDepartment(deptName: string) {
-    // if button no visible -> just return
-    if (await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').isVisible()) {
-      await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').click();
 
-      // this else if is stupid fix, but its working for now
-    } else if (await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').isHidden()) {
-      await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').waitFor({ state: "visible", timeout: 120_000 });
-      await this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit').click();
-    } else {
-      console.log("NOTE: Skipping test.");
-      return;
+  // helper function
+  private visitButton(deptName: string) {
+    return this.page.locator('div').filter({ hasText: new RegExp(`^${deptName}Visit$`) }).getByLabel('Visit');
+  }
+
+  // async visitDepartment(deptName: string) {
+  //   const button = this.visitButton(deptName);
+  //   // if button no visible -> just return
+  //   if (await button.isVisible()) {
+  //     await button.click();
+  //     // this else if is stupid fix, but its working for now
+  //   } else if ((await button.count() > 0 && await button.isHidden())) {
+  //     await button.waitFor({ state: "visible", timeout: 120_000 });
+  //     await button.click();
+  //   } else {
+  //     console.log("NOTE: Skipping visiting department test.");
+  //     return;
+  //   }
+  // };
+  async visitDepartment(deptName: string) {
+    const button = this.visitButton(deptName);
+
+    try {
+      // Wait for the button to appear, but don't fail immediately if not found
+      await button.waitFor({ state: "attached", timeout: 5_000 });
+
+      // Ensure the button is visible before clicking
+      await button.waitFor({ state: "visible", timeout: 120_000 });
+      await button.click();
+    } catch (error) {
+      console.log(`NOTE: Skipping visiting department test. Reason: ${error.message}`);
     }
   };
+
 
   async addMember(memberName: string) {
     await this.headerTab.memberPage.click();

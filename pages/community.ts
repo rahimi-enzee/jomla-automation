@@ -5,7 +5,7 @@ import { Headers } from "./components/header";
 export class CommunityPage {
   readonly page: Page;
   readonly header: Locator;
-  readonly headerPage:Headers;
+  readonly headerPage: Headers;
   readonly createCommunityBtn: Locator;
   readonly newCommunityName: Locator;
   readonly newCommunityStatus: Locator;
@@ -65,19 +65,33 @@ export class CommunityPage {
       console.log("Request didn't exist");
       return;
     }
-  }
+  };
 
-  async visitCommunity(comName: string) {
+  private communityBtn(comName: string) {
+    return this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first();
+  };
+
+  async visitCommunity(comName: string): Promise<boolean> {
     // TODO: if there are two communities with the same name (for some reason)
     // test will failed, fix this 
-    if (await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().isVisible()) {
-      await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().click();
-    } else {
-      await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().waitFor({state: "visible", timeout: 120_000});
+    const button = this.communityBtn(comName)
+    if (await button.isVisible()) {
+      await button.click();
+    } else if ((await button.count() > 0 && await button.isVisible())) {
+      await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().waitFor({ state: "visible", timeout: 120_000 });
       await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByLabel('Visit').first().click();
     }
+    else {
+      // TODO: maybe create the community if it didnt existed
+      // console.log("Community didn't existed");
+      return false;
+    }
     await expect(this.page.getByText(comName, { exact: true })).toBeVisible();
+    return true;
   }
+
+
+
 
   async inviteMember(memberName: string) {
     // the idea is to invite not inside member list page

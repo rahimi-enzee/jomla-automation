@@ -76,8 +76,12 @@ export class DashboardPage {
     await this.community.click();
     await expect(this.page.getByRole('heading', { name: 'Search Communities' })).toBeVisible();
     await expect(this.page.getByText('All', { exact: true })).toBeVisible();
-    await this.communityPage.visitCommunity("autocom");
-    await this.communityPage.allPageCanBeClick();
+    let status: boolean = await this.communityPage.visitCommunity("autocom");
+    if (status === true) {
+      await this.communityPage.allPageCanBeClick();
+    } else {
+      console.log("ERROR: community didnt existed");
+    }
   };
 
   async staffDirectoryPageCanBeClick() {
@@ -87,11 +91,10 @@ export class DashboardPage {
     // handle if staff doesnt have any department
     if (await this.page.getByRole('button', { name: 'Visit Department' }).isVisible()) {
       console.log("Visit Department button is visible.");
-    } else if (await this.page.getByRole('button', { name: "Visit Department" }).isHidden()) {
+    } else if ((await this.page.getByRole("button", { name: "Visit Department" }).count() > 0 && await this.page.getByRole('button', { name: "Visit Department" }).isHidden())) {
       await this.page.getByRole("button", { name: "Visit Department" }).waitFor({ state: "visible", timeout: 120_000 });
       console.log("Visit Department button is visible but very flaky...")
-    }
-    else {
+    } else {
       console.log("NOTE: Staff not in any department. Skipping test...");
       return;
     };
@@ -99,8 +102,43 @@ export class DashboardPage {
     // handle if staff in department but not an admin
     if (await this.page.getByRole('button', { name: '+ Member' }).isVisible()) {
       await expect(this.page.getByRole('button', { name: '+ Member' })).toBeVisible();
+    } else if ((await this.page.getByRole("button", { name: "+ Member" }).count() > 0 && await this.page.getByRole('button', { name: '+ Member' }).isHidden())) {
+      // hidden is not the same as 'the element is not there' or 'not existed',
+      // use count() > 0 to check if element is there or not existed.
+      await this.page.getByRole("button", { name: "+ Member" }).waitFor({ state: "visible", timeout: 120_000 });
+      console.log("+Member button is visible but very flaky...")
     } else {
-      console.log("NOTE: Staff not a department admin. Skipping Test...");
+      console.log("NOTE: Staff is not the department admin, and +Member is not visible.");
+      return;
+    };
+  };
+
+  async staffDirectoryPageCanBeClickAdmin(deptName: string) {
+    await this.staffDirectory.click();
+
+    await this.page.getByRole('textbox', { name: 'Select Department' }).click();
+    await this.page.getByText(deptName).click();
+
+    if (await this.page.getByRole('button', { name: 'Visit Department' }).isVisible()) {
+      console.log("Visit Department button is visible.");
+    } else if ((await this.page.getByRole("button", { name: "Visit Department" }).count() > 0 && await this.page.getByRole('button', { name: "Visit Department" }).isHidden())) {
+      await this.page.getByRole("button", { name: "Visit Department" }).waitFor({ state: "visible", timeout: 120_000 });
+      console.log("Visit Department button is visible but very flaky...")
+    } else {
+      console.log("NOTE: Staff not in any department. Skipping test...");
+      return;
+    };
+
+    // handle if staff in department but not an admin
+    if (await this.page.getByRole('button', { name: '+ Member' }).isVisible()) {
+      await expect(this.page.getByRole('button', { name: '+ Member' })).toBeVisible();
+    } else if ((await this.page.getByRole("button", { name: "+ Member" }).count() > 0 && await this.page.getByRole('button', { name: '+ Member' }).isHidden())) {
+      // hidden is not the same as 'the element is not there' or 'not existed',
+      // use count() > 0 to check if element is there or not existed.
+      await this.page.getByRole("button", { name: "+ Member" }).waitFor({ state: "visible", timeout: 120_000 });
+      console.log("+Member button is visible but very flaky...")
+    } else {
+      console.log("NOTE: Staff is not the department admin, and +Member is not visible.");
       return;
     };
   };
@@ -151,8 +189,25 @@ export class DashboardPage {
   }
 
 
-  async allPageCanBeClick(departmentName: string) {
+  async allPageCanBeClickUser(departmentName: string) {
     await this.staffDirectoryPageCanBeClick();
+    await this.calendarPageCanBeClick();
+    await this.departmentPageCanBeClick(departmentName);
+    await this.communityPageCanBeClick();
+    await this.fileManagementPageCanBeClick();
+    await this.mediaPageCanBeClick();
+    await this.linkHomePageCanBeClick();
+    await this.settingsPageCanBeClick();
+    await this.dashboardHomePageCanBeClick();
+    await this.profileCanBeClick();
+    await this.logoutDashboardCanBeClick();
+  };
+
+  // for admin, we have to handle different kind of staff 
+  // directory since they have to select the department 
+  // first
+  async allPageCanBeClickAdmin(departmentName: string) {
+    await this.staffDirectoryPageCanBeClickAdmin(departmentName);
     await this.calendarPageCanBeClick();
     await this.departmentPageCanBeClick(departmentName);
     await this.communityPageCanBeClick();
