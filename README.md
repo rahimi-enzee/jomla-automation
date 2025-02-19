@@ -55,3 +55,11 @@ To run test in debug mode, where we can control the flow, use `--debug` argument
 npx playwright test --debug //OR
 npx playwright test -g "Search Member by name" --debug
 ```
+
+To run test with allure report:
+
+```
+./run.sh <testname>
+```
+
+**NOTE**: Change testname with the test file name, eg: `tests/dashboardTest.spec.ts`.

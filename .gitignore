@@ -7,3 +7,7 @@ node_modules/
 /playwright/.cache/
 
 notes.md
+
+data
+allure-report
+allure-results
