@@ -4,7 +4,7 @@ import { DashboardPage } from "../pages/dashboard";
 import { CommunityPage } from "../pages/community";
 import { StaffDirectoryPage } from "../pages/staffDirectory";
 import { DepartmentPage } from "../pages/department";
-import { SettingsPage } from "../pages/settings";
+import { AdminSettings } from "../pages/adminSetting";
 import { RegisterPage } from "../pages/register";
 
 import { users } from "../data/users";
@@ -21,7 +21,8 @@ type JomlaFixture = {
   communitySuperAdminPage: CommunityPage;
   staffDirectoryPage: StaffDirectoryPage;
   departmentPage: DepartmentPage;
-  superAdminSettingsPage: SettingsPage;
+  superAdminSettingsPage: AdminSettings;
+  
   registerPage: RegisterPage;
 };
 
@@ -92,7 +93,7 @@ export const test = base.extend<JomlaFixture>({
 
     // this is for dashboard -> clicking into related url
     const dashboardPage = new DashboardPage(normalUserContext.page);
-    await dashboardPage.communityPageCanBeClick();
+    await dashboardPage.communityPageCanBeClick("excommunicado");
 
     await use(communityPage);
   },
@@ -124,10 +125,10 @@ export const test = base.extend<JomlaFixture>({
   },
 
   superAdminSettingsPage: async ({ superAdminContext }, use) => {
-    const settingsPage = new SettingsPage(superAdminContext.page);
+    const adminSetting= new AdminSettings(superAdminContext.page);
     const dashboardPage = new DashboardPage(superAdminContext.page);
     await dashboardPage.settingsPageCanBeClick();
-    await use(settingsPage);
+    await use(adminSetting);
   },
 
   registerPage: async ({ page }, use) => {

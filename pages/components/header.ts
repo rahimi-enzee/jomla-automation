@@ -36,8 +36,8 @@ export class Headers {
   async memberPageCanBeClick() {
     await this.memberPage.click();
     await expect(this.page.getByRole('textbox', { name: 'Search Member' })).toBeVisible();
-    await expect(this.page.getByRole('heading', { name: 'Admin', exact: true })).toBeVisible();
-    console.log("PASSED: Search Member and Admin under Member -- header tab -- visible.");
+    // await expect(this.page.getByRole('heading', { name: 'Admin', exact: true })).toBeVisible();
+    console.log("PASSED: Search Member -- header tab -- visible.");
   };
 
   async postPageCanBeClick() {

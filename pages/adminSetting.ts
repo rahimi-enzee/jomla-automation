@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
-export class SettingsPage {
+export class AdminSettings {
   readonly page: Page;
   readonly header: Locator;
   readonly requestBtn: Locator;

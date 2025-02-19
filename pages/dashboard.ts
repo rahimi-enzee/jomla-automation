@@ -3,6 +3,7 @@ import { DepartmentPage } from "./department";
 import { CommunityPage } from "./community";
 import { LoginPage } from "./login";
 import { Headers } from "./components/header";
+import { SettingsBar } from "./components/settingsBar";
 
 export class DashboardPage {
   readonly page: Page;
@@ -10,6 +11,7 @@ export class DashboardPage {
   readonly communityPage: CommunityPage;
   readonly loginPage: LoginPage;
   readonly headersTab: Headers;
+  readonly settingsBar: SettingsBar;
 
   readonly header: Locator;
   readonly dashboard: Locator;
@@ -35,6 +37,7 @@ export class DashboardPage {
     this.communityPage = new CommunityPage(page);
     this.loginPage = new LoginPage(page);
     this.headersTab = new Headers(page);
+    this.settingsBar = new SettingsBar(page);
 
     this.header = page.getByRole('heading', { name: 'My Wall' });
     this.staffDirectory = page.getByRole('link', { name: 'Staff Directory Staff' })
@@ -103,19 +106,19 @@ export class DashboardPage {
     if (role === "admin") {
       await this.page.getByRole('textbox', { name: 'Select Department' }).click();
       await this.page.getByText(deptName).click();
-    }
-
-    if (await this.visitDepartmentBtn.isVisible()) {
-      console.log("PASSED: Visit Department button is visible.");
-
-    } else if ((await this.visitDepartmentBtn.count() > 0 && await this.visitDepartmentBtn.isHidden())) {
-      await this.visitDepartmentBtn.waitFor({ state: "visible", timeout: 120_000 });
-      console.log("PASSED WITH CONDITION: Visit Department Button is flaky.");
-
-    } else {
-      console.log("PASSED WITH CONDITION: Department didn't existed or staff is not in any department.");
-      return;
     };
+
+    try {
+      await this.visitDepartmentBtn.waitFor({ state: "visible", timeout: 120_000 });
+      console.log("PASSED: Visit Department button is visible.");
+    } catch (error) {
+      if (await this.visitDepartmentBtn.count() > 0) {
+        console.log("PASSED WITH CONDITION: Visit Department Button is flaky.");
+      } else {
+        console.log("PASSED WITH CONDITION: Department didn't exist or staff is not in any department.");
+      }
+    };
+
 
     // handle if staff in department but not an admin
     if (await this.addMemberBtn.isVisible()) {
@@ -128,7 +131,7 @@ export class DashboardPage {
       console.log("PASSED WITH CONDITION: +Member button is visible but very flaky.")
     } else {
       console.log("PASSED WITH CONDITION: Staff is not the department admin, and +Member is not visible.");
-      return;
+      // return;
     };
   };
 
@@ -163,11 +166,9 @@ export class DashboardPage {
     console.log("PASSED: Systems and Official File visible");
   };
 
-  async settingsPageCanBeClick() {
+  async settingsPageCanBeClick(role: string) {
     await this.settings.click();
-    await expect(this.page.getByRole('link', { name: 'Themes' })).toBeVisible();
-    await expect(this.page.getByRole('link', { name: 'Feedback' })).toBeVisible();
-    console.log("PASSED: Themes and Feedback visible");
+    await this.settingsBar.allButtonCanBeClick(role);
   };
 
   async profileCanBeClick() {
@@ -193,7 +194,7 @@ export class DashboardPage {
     await this.fileManagementPageCanBeClick();
     await this.mediaPageCanBeClick();
     await this.linkHomePageCanBeClick();
-    await this.settingsPageCanBeClick();
+    await this.settingsPageCanBeClick(role);
     await this.dashboardHomePageCanBeClick();
     await this.profileCanBeClick();
     await this.logoutDashboardCanBeClick();

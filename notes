@@ -1,9 +1,0 @@
-# 
-
-Run command (FAILED)
-`npx playwright test -g "login multiple" --workers=100 --headed`
-
-
-## Design
-
-Login should be **Global Setup** and logout should be **Global Tear Down**.
