@@ -1,13 +1,10 @@
 # Automation framework for jomla with playwright (WIP)
 
+Automation testing framework using Playwright and Allure for report.
+
 ## What's cover for now
 
-1. login page
-2. staff directory page
-
-- search member by name.
-- add and delete member to department from staff directory.
-- click and view staff profile from staff directory.
+Login and click on all available pages. 
 
 ## Prerequisite
 
@@ -25,6 +22,14 @@ Install dependencies:
 
 ```
 npm install
+npm install -D @playwright/test allure-playwright 
+```
+
+This repo didn't include user's data for privacy reason, create new data directory and create users data inside it.
+
+```
+mkdir data
+touch data/users.ts
 ```
 
 To run full test:
@@ -63,3 +68,5 @@ To run test with allure report:
 ```
 
 **NOTE**: Change testname with the test file name, eg: `tests/dashboardTest.spec.ts`.
+
+**IMPORTANT**: On Windows, use `/` instead of `\` (eg:` npx playwright test tests/dashboardTest.spec.ts`). This is because it will return error test not found if we use `\` . **END**.
