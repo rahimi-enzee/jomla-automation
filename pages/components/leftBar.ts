@@ -1,0 +1,93 @@
+import { expect, type Locator, type Page } from "@playwright/test";
+
+export class LeftBar {
+    readonly page: Page;
+    readonly staffDirectory: Locator;
+    readonly community: Locator;
+    readonly department: Locator;
+    readonly settings: Locator;
+    readonly dashboardHome: Locator;
+    readonly calendar: Locator;
+    readonly fileManagement: Locator;
+    readonly media: Locator;
+    readonly linkHome: Locator;
+    readonly logoutDashboard: Locator;
+
+    constructor(page: Page) {
+        this.page = page;
+        this.staffDirectory = page.getByRole('link', { name: 'Staff Directory Staff' });
+        this.community = page.getByRole('link', { name: 'Community' });
+        this.department = page.getByRole('link', { name: 'Department Department' });
+        this.settings = page.getByRole("link", { name: 'Settings Settings' });
+        this.dashboardHome = page.getByRole('link', { name: 'Dashboard Dashboard' });
+        this.calendar = this.page.getByRole('link', { name: 'Calendar Calendar' });
+        this.fileManagement = this.page.getByRole('link', { name: 'File Management File' });
+        this.media = page.getByRole('link', { name: 'Media Media' });
+        this.linkHome = page.getByRole('link', { name: 'Link Link' });
+        this.logoutDashboard = page.getByRole('link', { name: 'Logout Logout' });
+    }
+
+    async navigateToStaffDirectory() {
+        await this.staffDirectory.click();
+    }
+
+    async navigateToCommunity() {
+        await this.community.click();
+
+        await expect(this.page.getByRole('heading', { name: 'Search Communities' })).toBeVisible();
+        await expect(this.page.getByText('All', { exact: true })).toBeVisible();
+        console.log("PASSED: Search communities and All drop down visible");
+    };
+
+    async navigateToDepartment() {
+        await this.department.click();
+    }
+
+    async navigateToSettings() {
+        await this.settings.click();
+    }
+
+    async navigateToDashboardHome() {
+        await this.dashboardHome.click();
+        await expect(this.page.getByRole('heading', { name: 'My Wall' })).toBeVisible();
+        await expect(this.page.getByRole('heading', { name: 'Advertisement' })).toBeVisible();
+        console.log("PASSED: Dashboard header and advertisement visible.");
+    }
+
+    async navigateToCalendar() {
+        if (await this.calendar.isVisible()) {
+            await this.calendar.click()
+            await expect(this.page.getByRole('button', { name: 'Today' })).toBeVisible();
+            await expect(this.page.getByLabel('Sunday')).toBeVisible();
+            console.log("PASSED: Today and Sunday visible.");
+        } else {
+            console.log("PASSED WITH CONDITION: Super Admin disabled calendar feature.");
+        }
+    }
+
+    async navigateToFileManagement() {
+        await this.fileManagement.click();
+        await expect(this.page.getByRole('heading', { name: 'Search Files' })).toBeVisible();
+        await expect(this.page.getByRole('cell', { name: 'File Name' })).toBeVisible();
+        console.log("PASSED: Search Files and File Name visible.");
+    }
+
+    async navigateToMedia() {
+        await this.media.click();
+        await expect(this.page.getByRole('heading', { name: 'Images' })).toBeVisible();
+        await expect(this.page.getByRole('heading', { name: 'Videos' })).toBeVisible();
+        console.log("PASSED: Images and Videos visible");
+    };
+
+    async navigateToLinkHome() {
+        await this.linkHome.click();
+        await expect(this.page.getByRole('heading', { name: 'Systems' })).toBeVisible();
+        await expect(this.page.getByRole('heading', { name: 'Official File' })).toBeVisible();
+        console.log("PASSED: Systems and Official File visible");
+    }
+
+    async navigateToLogout() {
+        await this.logoutDashboard.click();
+        console.log("PASSED: LOGOUT.");
+    }
+}

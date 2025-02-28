@@ -4,6 +4,7 @@ import { CommunityPage } from "./community";
 import { LoginPage } from "./login";
 import { Headers } from "./components/header";
 import { SettingsBar } from "./components/settingsBar";
+import { LeftBar } from "./components/leftBar";
 
 export class DashboardPage {
   readonly page: Page;
@@ -12,6 +13,7 @@ export class DashboardPage {
   readonly loginPage: LoginPage;
   readonly headersTab: Headers;
   readonly settingsBar: SettingsBar;
+  readonly leftBar: LeftBar;
 
   readonly header: Locator;
   readonly dashboard: Locator;
@@ -38,6 +40,7 @@ export class DashboardPage {
     this.loginPage = new LoginPage(page);
     this.headersTab = new Headers(page);
     this.settingsBar = new SettingsBar(page);
+    this.leftBar = new LeftBar(page);
 
     this.header = page.getByRole('heading', { name: 'My Wall' });
     this.staffDirectory = page.getByRole('link', { name: 'Staff Directory Staff' })
@@ -64,30 +67,15 @@ export class DashboardPage {
   };
 
   async dashboardHomePageCanBeClick() {
-    await this.dashboardHome.click();
-    await expect(this.page.getByRole('heading', { name: 'My Wall' })).toBeVisible();
-    await expect(this.page.getByRole('heading', { name: 'Advertisement' })).toBeVisible();
-    console.log("PASSED: Dashboard header and advertisement visible.");
-  }
+    await this.leftBar.navigateToDashboardHome();
+  };
 
   async calendarPageCanBeClick() {
-
-    if (await this.calendar.isVisible()) {
-      await this.calendar.click()
-      await expect(this.page.getByRole('button', { name: 'Today' })).toBeVisible();
-      await expect(this.page.getByLabel('Sunday')).toBeVisible();
-      console.log("PASSED: Today and Sunday visible.");
-    } else {
-      console.log("PASSED WITH CONDITION: Super Admin disabled calendar feature.");
-    }
-  }
+    await this.leftBar.navigateToCalendar();
+  };
 
   async communityPageCanBeClick(comName: string) {
-    await this.community.click();
-
-    await expect(this.page.getByRole('heading', { name: 'Search Communities' })).toBeVisible();
-    await expect(this.page.getByText('All', { exact: true })).toBeVisible();
-    console.log("PASSED: Search communities and All drop down visible");
+    await this.leftBar.navigateToCommunity();
 
     let status: boolean = await this.communityPage.visitCommunity(comName);
 
@@ -146,28 +134,19 @@ export class DashboardPage {
   };
 
   async fileManagementPageCanBeClick() {
-    await this.fileManagement.click();
-    await expect(this.page.getByRole('heading', { name: 'Search Files' })).toBeVisible();
-    await expect(this.page.getByRole('cell', { name: 'File Name' })).toBeVisible();
-    console.log("PASSED: Search Files and File Name visible.");
+    await this.leftBar.navigateToFileManagement();
   };
 
   async mediaPageCanBeClick() {
-    await this.media.click();
-    await expect(this.page.getByRole('heading', { name: 'Images' })).toBeVisible();
-    await expect(this.page.getByRole('heading', { name: 'Videos' })).toBeVisible();
-    console.log("PASSED: Images and Videos visible");
+    await this.leftBar.navigateToMedia();
   };
 
   async linkHomePageCanBeClick() {
-    await this.linkHome.click();
-    await expect(this.page.getByRole('heading', { name: 'Systems' })).toBeVisible();
-    await expect(this.page.getByRole('heading', { name: 'Official File' })).toBeVisible();
-    console.log("PASSED: Systems and Official File visible");
+    await this.leftBar.navigateToLinkHome();
   };
 
   async settingsPageCanBeClick(role: string) {
-    await this.settings.click();
+    await this.leftBar.navigateToSettings();
     await this.settingsBar.allButtonCanBeClick(role);
   };
 
@@ -182,8 +161,7 @@ export class DashboardPage {
   };
 
   async logoutDashboardCanBeClick() {
-    await this.logoutDashboard.click();
-    console.log("PASSED: LOGOUT.");
+    await this.leftBar.navigateToLogout();
   };
 
   async allPageCanBeClick(departmentName: string, comName: string, role: string) {

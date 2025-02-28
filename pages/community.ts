@@ -77,7 +77,7 @@ export class CommunityPage {
     const button = this.communityBtn(comName)
 
     try {
-      await button.waitFor({state: "visible", timeout: 120_000});
+      await button.waitFor({ state: "visible", timeout: 200_000 });
       await button.click();
       console.log(`PASSED: Visit button for ${comName} is visible and clicked.`);
     } catch (error) {

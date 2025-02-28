@@ -22,7 +22,7 @@ type JomlaFixture = {
   staffDirectoryPage: StaffDirectoryPage;
   departmentPage: DepartmentPage;
   superAdminSettingsPage: AdminSettings;
-  
+
   registerPage: RegisterPage;
 };
 
@@ -125,9 +125,9 @@ export const test = base.extend<JomlaFixture>({
   },
 
   superAdminSettingsPage: async ({ superAdminContext }, use) => {
-    const adminSetting= new AdminSettings(superAdminContext.page);
+    const adminSetting = new AdminSettings(superAdminContext.page);
     const dashboardPage = new DashboardPage(superAdminContext.page);
-    await dashboardPage.settingsPageCanBeClick();
+    await dashboardPage.settingsPageCanBeClick("admin");
     await use(adminSetting);
   },
 

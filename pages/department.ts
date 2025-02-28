@@ -41,18 +41,20 @@ export class DepartmentPage {
     if (await this.page.locator('header').filter({ hasText: new RegExp(`^${deptName}$`) }).locator('img').first().isVisible()) {
       console.log("PASSED: User automatically redirected into department page due to only having one depertment.");
       return;
-    };
+    } else {
+      try {
+        // Wait for the button to appear, but don't fail immediately if not found
+        await button.waitFor({ state: "attached", timeout: 5_000 });
 
-    try {
-      // Wait for the button to appear, but don't fail immediately if not found
-      await button.waitFor({ state: "attached", timeout: 5_000 });
+        // Ensure the button is visible before clicking
+        await button.waitFor({ state: "visible", timeout: 120_000 });
+        await button.click();
+      } catch (error) {
+        console.log(`NOTE: Skipping visiting department test. Reason: ${error.message}`);
+      }
 
-      // Ensure the button is visible before clicking
-      await button.waitFor({ state: "visible", timeout: 120_000 });
-      await button.click();
-    } catch (error) {
-      console.log(`NOTE: Skipping visiting department test. Reason: ${error.message}`);
     }
+
   };
 
 
