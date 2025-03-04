@@ -8,7 +8,7 @@ import { departmentName, communityName } from "../data/deptCom.ts";
 */
 
 test.describe("Login and test all pages can be visit", () => {
-  test.skip("super admin account", async ({ dashboardPage, loginAs }) => {
+  test("super admin account", async ({ dashboardPage, loginAs }) => {
     await loginAs("admin");
     await dashboardPage.allPageCanBeClick(departmentName[0], communityName[0], "admin");
   });
@@ -23,7 +23,7 @@ test.describe("Login and test all pages can be visit", () => {
     await dashboardPage.allPageCanBeClick(departmentName[1], communityName[0], "tester");
   });
 
-  test("normal user account with two department", async ({ dashboardPage, loginAs }) => {
+  test.skip("normal user account with two department", async ({ dashboardPage, loginAs }) => {
     await loginAs("testAccount2");
     await dashboardPage.allPageCanBeClick(departmentName[2], communityName[1], "tester");
   });

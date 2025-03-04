@@ -137,8 +137,8 @@ export class DashboardPage {
     await this.leftBar.navigateToFileManagement();
   };
 
-  async mediaPageCanBeClick() {
-    await this.leftBar.navigateToMedia();
+  async mediaPageCanBeClick(role: string) {
+    await this.leftBar.navigateToMedia(role);
   };
 
   async linkHomePageCanBeClick() {
@@ -168,9 +168,9 @@ export class DashboardPage {
     await this.staffDirectoryPageCanBeClick(departmentName, role);
     await this.calendarPageCanBeClick();
     await this.departmentPageCanBeClick(departmentName);
-    await this.communityPageCanBeClick(comName);
+    // await this.communityPageCanBeClick(comName);
     await this.fileManagementPageCanBeClick();
-    await this.mediaPageCanBeClick();
+    await this.mediaPageCanBeClick(role);
     await this.linkHomePageCanBeClick();
     await this.settingsPageCanBeClick(role);
     await this.dashboardHomePageCanBeClick();

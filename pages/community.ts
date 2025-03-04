@@ -72,8 +72,6 @@ export class CommunityPage {
   };
 
   async visitCommunity(comName: string): Promise<boolean> {
-    // TODO: if there are two communities with the same name (for some reason)
-    // test will failed, fix this 
     const button = this.communityBtn(comName)
 
     try {
@@ -91,19 +89,6 @@ export class CommunityPage {
     await expect(this.page.getByText(comName, { exact: true })).toBeVisible();
     return true;
 
-    // if (await button.isVisible()) {
-    //   await button.click();
-    // } else if ((await button.count() > 0 && await button.isVisible())) {
-    //   await button.waitFor({ state: "visible", timeout: 120_000 });
-    //   await button.click();
-    // }
-    // else {
-    //   // TODO: maybe create the community if it didnt existed
-    //   // console.log("Community didn't existed");
-    //   return false;
-    // }
-    // await expect(this.page.getByText(comName, { exact: true })).toBeVisible();
-    // return true;
   }
 
 

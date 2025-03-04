@@ -72,10 +72,42 @@ export class LeftBar {
         console.log("PASSED: Search Files and File Name visible.");
     }
 
-    async navigateToMedia() {
+    async addAndRemoveTag(tagName: string) {
+        await this.page.getByRole('button', { name: 'Manage Album' }).click();
+        console.log("PASSED: Manage Album button visible and clicked.");
+
+        const addBtn = this.page.getByRole('button', { name: '+ Add' });
+        await expect(async () => {
+            await addBtn.click();
+        }).toPass({ intervals: [1_000, 2_000, 3_000, 4_000, 5_000], timeout: 200_000 });
+
+
+
+        await this.page.getByRole('textbox', { name: 'Enter album name' }).fill(tagName);
+        await this.page.getByRole('button', { name: 'Create' }).click();
+        console.log(`PASSED: ${tagName} created.`);
+
+        await expect(async () => {
+            await expect(this.page.getByRole('button', { name: new RegExp(`^${tagName} Delete$`) })).toBeVisible();
+            await this.page.getByRole('button', { name: new RegExp(`^${tagName} Delete$`) }).getByRole('button').click();
+            await this.page.getByRole('button', { name: 'Yes' }).click();
+            console.log(`PASSED: ${tagName} deleted.`);
+
+        }).toPass({
+            intervals: [1_000, 2_000, 3_000, 4_000, 5_000],
+            timeout: 200_000
+        });
+    };
+
+    async navigateToMedia(role: string) {
         await this.media.click();
         await expect(this.page.getByRole('heading', { name: 'Images' })).toBeVisible();
         await expect(this.page.getByRole('heading', { name: 'Videos' })).toBeVisible();
+        // for super admin, we can manage album
+        // add new image tags, and delete the tags
+        if (role === "admin") {
+            await this.addAndRemoveTag("testTag");
+        }
         console.log("PASSED: Images and Videos visible");
     };
 
