@@ -6,6 +6,7 @@ import { StaffDirectoryPage } from "../pages/staffDirectory";
 import { DepartmentPage } from "../pages/department";
 import { AdminSettings } from "../pages/adminSetting";
 import { RegisterPage } from "../pages/register";
+import { ProfilePage } from "../pages/profile";
 
 import { users } from "../data/users";
 type UserRole = keyof typeof users;
@@ -22,6 +23,7 @@ type JomlaFixture = {
   staffDirectoryPage: StaffDirectoryPage;
   departmentPage: DepartmentPage;
   superAdminSettingsPage: AdminSettings;
+  profilePage: ProfilePage;
 
   registerPage: RegisterPage;
 };
@@ -98,14 +100,6 @@ export const test = base.extend<JomlaFixture>({
     await use(communityPage);
   },
 
-  // TODO: we dont need this for now
-  // communitySuperAdminPage: async ({superAdminContext}, use) => {
-  //   const communityPage = new CommunityPage(superAdminContext.page);
-  //   const dashboardPage = new DashboardPage(superAdminContext.page);
-  //   await dashboardPage.communityPageCanBeClick();
-  //   await use(communityPage);
-  // },
-
   staffDirectoryPage: async ({ page }, use) => {
     const staffDirectoryPage = new StaffDirectoryPage(page);
     await use(staffDirectoryPage);
@@ -140,6 +134,16 @@ export const test = base.extend<JomlaFixture>({
     const loginPage = new LoginPage(page);
     await use(loginPage);
   },
+
+  // this will be use by rahimi-qa
+  profilePage: async ({ page }, use) => {
+    const profilePage = new ProfilePage(page);
+    const loginPage = new LoginPage(page);
+    await loginPage.navigateToAndVisible();
+    await loginPage.startLogin(users.testAccount.email, users.testAccount.password);
+
+    await use(profilePage);
+  }
 
 });
 

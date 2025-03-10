@@ -22,8 +22,10 @@ Install dependencies:
 
 ```
 npm install
+npm install -g allure-commandline
 npm install -D @playwright/test allure-playwright 
 ```
+**NOTE**: for windows, you have to install Java and set JAVA_HOME path **END**  
 
 This repo didn't include user's data for privacy reason, create new data directory and create users data inside it.
 

@@ -168,7 +168,7 @@ export class DashboardPage {
     await this.staffDirectoryPageCanBeClick(departmentName, role);
     await this.calendarPageCanBeClick();
     await this.departmentPageCanBeClick(departmentName);
-    // await this.communityPageCanBeClick(comName);
+    await this.communityPageCanBeClick(comName);
     await this.fileManagementPageCanBeClick();
     await this.mediaPageCanBeClick(role);
     await this.linkHomePageCanBeClick();

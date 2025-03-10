@@ -42,7 +42,7 @@ export class AdminSettings {
       console.log(`${comName} not in request list.`);
       return;
     }
-  }
+  };
 
 }
 
