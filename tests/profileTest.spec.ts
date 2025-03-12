@@ -1,4 +1,5 @@
 import { test, expect } from "../fixtures/fixture.ts";
+import { users } from "../data/users.ts";
 
 test("profile page", async ({ profilePage }) => {
     await profilePage.navigateTo();
@@ -7,5 +8,11 @@ test("profile page", async ({ profilePage }) => {
 
 test("Change bio information", async ({ profilePage }) => {
     await profilePage.navigateTo();
-    await profilePage.changeBioInformation("1999-12-31", "+60 11-1111-1111");
+    await profilePage.changeBioInformation(users.testAccount.dob, users.testAccount.whatsappNumber);
+});
+
+test("Change department info -- 1 department", async ({ profilePage }) => {
+    await profilePage.navigateTo();
+    await profilePage.changeDepartmentInfo();
+
 });

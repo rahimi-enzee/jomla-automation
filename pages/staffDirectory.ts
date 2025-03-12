@@ -35,9 +35,19 @@ export class StaffDirectoryPage {
     await expect(this.addMemberBtn).toBeVisible();
   };
 
+  // helper 
+  private searchStaffBtn(memberName: string) {
+    return this.page.getByRole("link", { name: memberName, exact: true });
+  }
+
   async searchMember(memberName: string) {
     await this.searchInput.fill(memberName);
-    await expect(this.page.getByRole("link", { name: memberName, exact: true })).toBeVisible();
+    await expect(this.searchStaffBtn(memberName)).toBeVisible();
+  };
+
+  async clickOnMemberName(memberName: string) {
+    await this.searchInput.fill(memberName);
+    await this.page.getByRole('link', { name: new RegExp(`^${memberName}\\s+${memberName}\\s+.*$`, 'i') }).click();
   };
 
   async addAndDeleteMember(memberName: string) {
@@ -86,7 +96,7 @@ export class StaffDirectoryPage {
 
     }
 
-    await expect(this.page.getByRole("heading", { name: memberName , exact: true})).toBeVisible();
+    await expect(this.page.getByRole("heading", { name: memberName, exact: true })).toBeVisible();
 
     // delete member
     await this.page.getByRole("button", { name: "Visit Department" }).click();

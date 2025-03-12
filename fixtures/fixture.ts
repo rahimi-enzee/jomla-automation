@@ -140,7 +140,7 @@ export const test = base.extend<JomlaFixture>({
     const profilePage = new ProfilePage(page);
     const loginPage = new LoginPage(page);
     await loginPage.navigateToAndVisible();
-    await loginPage.startLogin(users.testAccount.email, users.testAccount.password);
+    await loginPage.startLogin(users.admin.email, users.admin.password);
 
     await use(profilePage);
   }
