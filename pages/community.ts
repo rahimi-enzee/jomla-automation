@@ -33,38 +33,41 @@ export class CommunityPage {
     await this.headerPage.goToEachPages();
   }
 
-  async createCommunity(comName: string) {
+  // comStatus can be either public or private
+  async createCommunity(comName: string, comStatus: string) {
     await this.createCommunityBtn.click();
     await this.newCommunityName.click();
     await this.newCommunityName.fill(comName);
+    await this.page.getByRole('textbox', { name: 'Description' }).fill('this is for testing');
 
     if (await this.page.getByText('This community name already').isVisible()) {
       console.log("Community with the same name already existed. Skipping test");
+      this.createCommunityCancelBtn.click();
       return;
     } else if (await this.page.getByText("A pending request for this community name already exists.").isVisible()) {
       console.log("Already in request. Skipping test");
       this.createCommunityCancelBtn.click();
       return;
-    }
+    };
 
-    await this.newCommunityStatus.selectOption("public"); // this can be public or private
+    await this.newCommunityStatus.selectOption(comStatus); // this can be public or private
     await this.createCommunitySaveBtn.click();
-  }
+    await expect(this.page.getByText('Community created')).toBeVisible();
+  };
 
   async checkCommunityVisible(comName: string) {
     await this.page.reload();
     await expect(this.page.getByRole('heading', { name: comName }).first()).toBeVisible();
   }
 
-  async communityDeletion(comName: string) {
-    if (await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByRole('button').first().isVisible()) {
+  // status can be either Yes or No
+  async deleteCommunity(comName: string, status: string) {
+    await expect(async () => {
       await this.page.locator('div').filter({ hasText: new RegExp(`^${comName} Visit$`) }).getByRole('button').first().click();
       await this.page.getByRole('button', { name: 'Delete' }).click();
-      await this.page.getByRole('button', { name: 'Yes' }).click();
-    } else {
-      console.log("Request didn't exist");
-      return;
-    }
+      await this.page.getByRole('button', { name: status }).click();
+
+    }).toPass({ intervals: [1000, 2000, 3000] });
   };
 
   private communityBtn(comName: string) {

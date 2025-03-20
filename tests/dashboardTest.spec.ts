@@ -15,6 +15,7 @@ test.describe("Login and test all pages can be visit", () => {
   });
 
   test("super admin account", async ({ dashboardPage, loginAs }) => {
+    test.setTimeout(120_000);
     await loginAs("admin");
     await dashboardPage.allPageCanBeClick(departmentName[0], communityName[0], "admin");
   });

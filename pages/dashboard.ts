@@ -73,6 +73,11 @@ export class DashboardPage {
     await this.leftBar.navigateToCalendar();
   };
 
+  async communityCreation(comName: string, comStatus: string) {
+    await this.leftBar.navigateToCommunity();
+    await this.communityPage.createCommunity(comName, comStatus);
+  }
+
   async communityPageCanBeClick(comName: string) {
     await this.leftBar.navigateToCommunity();
 
@@ -84,6 +89,11 @@ export class DashboardPage {
       console.log(`PASSED WITH CONDITION: community ${comName} didnt existed`);
     }
   };
+
+  async communityDeletion(comName: string, status: string) {
+    await this.leftBar.navigateToCommunity();
+    await this.communityPage.deleteCommunity(comName, status);
+  }
 
   async staffDirectoryPageCanBeClick(deptName: string, role: string) {
     await this.staffDirectory.click();
@@ -167,7 +177,12 @@ export class DashboardPage {
     await this.staffDirectoryPageCanBeClick(departmentName, role);
     await this.calendarPageCanBeClick();
     await this.departmentPageCanBeClick(departmentName);
+
+    // community creation, go inside, deletion
+    await this.communityCreation(comName, "private")
     await this.communityPageCanBeClick(comName);
+    await this.communityDeletion(comName, "Yes");
+
     await this.fileManagementPageCanBeClick();
     await this.mediaPageCanBeClick(role);
     // await this.linkHomePageCanBeClick();
