@@ -37,8 +37,12 @@ export class LoginPage {
     await this.password.fill(password);
     await this.loginBtn.click();
   }
+
+
+  // NOTE: this is for production
+
   async startNewLogin(email: string, password: string) {
-    await this.page.goto("/");
+    await this.page.goto("https://jomla.tourism.gov.my/");
     await this.newLoginBtn.click();
     await this.newLoginEmail.fill(email);
     await this.nextBtn.click();

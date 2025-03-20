@@ -96,7 +96,7 @@ export class SettingsBar {
     await this.themeCanBeClick();
     await this.feedbackCanBeClick();
 
-    if (role === "admin") {
+    if (role === "admin" || role === "superAdmin") {
       await this.basicSettingCanBeClick();
       await this.advancedSettingCanBeClick();
       await this.requestCanBeClick();

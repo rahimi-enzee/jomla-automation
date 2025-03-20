@@ -114,7 +114,14 @@ export class LeftBar {
     async navigateToLinkHome() {
         await this.linkHome.click();
         await expect(this.page.getByRole('heading', { name: 'Systems' })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: 'Dashboard Tourism Malaysia' })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: 'Sistem Keluar Pejabat favicon' })).toBeVisible();
+
         await expect(this.page.getByRole('heading', { name: 'Official File' })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: 'Arahan Kewangan Dan' })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: 'Rujukan Fail favicon Rujukan' })).toBeVisible();
+        await expect(this.page.getByRole('list').filter({ hasText: 'Arahan Kewangan Dan' }).getByRole('button')).toBeVisible();
+
         console.log("PASSED: Systems and Official File visible");
     }
 

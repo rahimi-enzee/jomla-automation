@@ -91,7 +91,7 @@ export class DashboardPage {
 
     // super admin will not be redirect into department's staff directory,
     // handle searching and clicking on certain department
-    if (role === "admin") {
+    if (role === "admin" || role === "superAdmin") {
       await this.page.getByRole('textbox', { name: 'Select Department' }).click();
       await this.page.getByText(deptName).click();
     };

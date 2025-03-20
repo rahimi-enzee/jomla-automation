@@ -8,6 +8,11 @@ import { departmentName, communityName } from "../data/deptCom.ts";
 */
 
 test.describe("Login and test all pages can be visit", () => {
+  test("Production", async ({ dashboardPage, loginAsNew }) => {
+    await loginAsNew("superAdmin");
+    await dashboardPage.allPageCanBeClick(departmentName[3], communityName[2], "superAdmin");
+  });
+
   test("super admin account", async ({ dashboardPage, loginAs }) => {
     await loginAs("admin");
     await dashboardPage.allPageCanBeClick(departmentName[0], communityName[0], "admin");
