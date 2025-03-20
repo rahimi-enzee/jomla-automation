@@ -7,13 +7,15 @@ import { departmentName, communityName } from "../data/deptCom.ts";
 * but with different account and role.
 */
 
-test.describe("Login and test all pages can be visit", () => {
+test.describe("Regression test for production/live", () => {
   test("Production", async ({ dashboardPage, loginAsNew }) => {
     test.setTimeout(120_000);
     await loginAsNew("superAdmin");
     await dashboardPage.allPageCanBeClick(departmentName[3], communityName[2], "superAdmin");
   });
+});
 
+test.describe("Regression test for tempstaging", () => {
   test("super admin account", async ({ dashboardPage, loginAs }) => {
     test.setTimeout(120_000);
     await loginAs("admin");

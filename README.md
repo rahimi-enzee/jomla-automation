@@ -4,11 +4,18 @@ Automation testing framework using Playwright and Allure for report.
 
 ## What's cover for now
 
-Login and click on all available pages. 
+Regression test for production and tempstaging.
+
+To run regression:  
+`npx playwright test -g "Production"`.  
+You can add `--headed` or `--debug`.  
+You also can run test with Allure, read more for Allure.
 
 ## Prerequisite
 
-1. Node, this playwright use Typescript as main language.
+1. Node
+2. Playwright
+3. Allure
 
 ## How's To
 

@@ -86,7 +86,7 @@ export class SettingsBar {
     await this.page.getByRole('link', { name: 'Business Grades' }).click();
     await expect(this.page.getByRole('heading', { name: 'Business Grades' })).toBeVisible();
     await expect(this.page.getByText('Manage the business grades')).toBeVisible();
-    console.log("PASSSED: Business Grade and Manage the business grades -- Super User -- visible.");
+    console.log("PASSED: Business Grade and Manage the business grades -- Super User -- visible.");
   };
 
   async roleCanBeClick() {
