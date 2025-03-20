@@ -88,10 +88,7 @@ export class CommunityPage {
       }
     }
 
-    // TODO: this will return failed if the community have post to everyone, since it will have the community 
-    // name above the post
-    // await expect(this.page.getByText(comName, { exact: true })).toBeVisible();
-    // await expect(this.page.locator('header').filter({ hasText: new RegExp(`^${comName}\\s+.*$`) }).locator('img').first()).toBeVisible();
+    await expect(this.page.getByText(comName, { exact: true }).first()).toBeVisible();
     return true;
 
   }

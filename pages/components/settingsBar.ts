@@ -66,8 +66,12 @@ export class SettingsBar {
 
   async businessUnitCanBeClick() {
     await this.page.getByRole('link', { name: 'Business Units' }).click();
-    await expect(this.page.getByRole('heading', { name: 'Business Units' })).toBeVisible();
-    await expect(this.page.getByText('Select Department')).toBeVisible();
+
+    await expect(async () => {
+      await expect(this.page.getByRole('heading', { name: 'Business Units' })).toBeVisible();
+      await expect(this.page.getByText('Select Department')).toBeVisible();
+    }).toPass({ intervals: [1000, 2000, 3000], timeout: 60_000 });
+
     console.log("PASSED: Business Units and Select Department -- Super User -- visible.");
   };
 

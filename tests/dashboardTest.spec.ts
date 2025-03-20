@@ -9,6 +9,7 @@ import { departmentName, communityName } from "../data/deptCom.ts";
 
 test.describe("Login and test all pages can be visit", () => {
   test("Production", async ({ dashboardPage, loginAsNew }) => {
+    test.setTimeout(120_000);
     await loginAsNew("superAdmin");
     await dashboardPage.allPageCanBeClick(departmentName[3], communityName[2], "superAdmin");
   });

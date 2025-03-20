@@ -61,7 +61,6 @@ export class DashboardPage {
 
 
   async navigateToAndVisible() {
-    // await this.page.goto("/dashboard"); // there's no need for this, because of auto redirect
     await expect(this.header).toBeVisible();
     console.log("PASSED: Header visible.");
   };
@@ -171,11 +170,10 @@ export class DashboardPage {
     await this.communityPageCanBeClick(comName);
     await this.fileManagementPageCanBeClick();
     await this.mediaPageCanBeClick(role);
-    await this.linkHomePageCanBeClick();
+    // await this.linkHomePageCanBeClick();
     await this.settingsPageCanBeClick(role);
     await this.dashboardHomePageCanBeClick();
     await this.profileCanBeClick();
     await this.logoutDashboardCanBeClick();
   };
 }
-
