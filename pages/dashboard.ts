@@ -178,6 +178,17 @@ export class DashboardPage {
     await this.leftBar.navigateToLogout();
   };
 
+
+  async dashboardPosting() {
+
+  }
+
+
+
+  //////////////////////////////////////////////////////////////////
+
+
+
   async allPageCanBeClick({ departmentName, comName, role, createCom }: { departmentName: string, comName: string, role: string, createCom: boolean }) {
     await this.staffDirectoryPageCanBeClick(departmentName, role);
     await this.calendarPageCanBeClick();

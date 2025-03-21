@@ -7,6 +7,7 @@ import { DepartmentPage } from "../pages/department";
 import { AdminSettings } from "../pages/adminSetting";
 import { RegisterPage } from "../pages/register";
 import { ProfilePage } from "../pages/profile";
+import { Posting } from "../pages/components/posting";
 
 import { users } from "../data/users";
 type UserRole = keyof typeof users;
@@ -24,6 +25,7 @@ type JomlaFixture = {
   departmentPage: DepartmentPage;
   superAdminSettingsPage: AdminSettings;
   profilePage: ProfilePage;
+  posting: Posting;
 
   registerPage: RegisterPage;
 };
@@ -143,6 +145,15 @@ export const test = base.extend<JomlaFixture>({
     await loginPage.startLogin(users.admin.email, users.admin.password);
 
     await use(profilePage);
+  },
+
+  posting: async ({ page }, use) => {
+    const posting = new Posting(page);
+    const loginPage = new LoginPage(page);
+    await loginPage.navigateToAndVisible();
+    await loginPage.startLogin(users.admin.email, users.admin.password);
+
+    await use(posting);
   }
 
 });
