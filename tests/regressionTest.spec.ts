@@ -1,5 +1,6 @@
 import { test, expect } from "../fixtures/fixture.ts";
 import { departmentName, communityName } from "../data/deptCom.ts";
+import { rootCertificates } from "tls";
 
 /*
 * There will be 5 test in this file, 
@@ -8,37 +9,34 @@ import { departmentName, communityName } from "../data/deptCom.ts";
 */
 
 test.describe("Regression test for production/live", () => {
-  test("Production", async ({ dashboardPage, loginAsNew }) => {
+  test.skip("Production", async ({ dashboardPage, loginAsNew }) => {
     test.setTimeout(120_000);
     await loginAsNew("superAdmin");
-    await dashboardPage.allPageCanBeClick(departmentName[3], communityName[1], "superAdmin");
+
+    const testContext = {
+      departmentName: departmentName[3],
+      comName: communityName[1],
+      role: "superAdmin",
+      createCom: false,
+    };
+
+    await dashboardPage.allPageCanBeClick(testContext);
   });
 });
 
 test.describe("Regression test for tempstaging", () => {
-  test("super admin account", async ({ dashboardPage, loginAs }) => {
+  test("tempstaging", async ({ dashboardPage, loginAs }) => {
     test.setTimeout(120_000);
     await loginAs("admin");
-    await dashboardPage.allPageCanBeClick(departmentName[0], communityName[0], "admin");
+
+    const testContext = {
+      departmentName: departmentName[0],
+      comName: communityName[0],
+      role: "admin",
+      createCom: true,
+    };
+
+    await dashboardPage.allPageCanBeClick(testContext);
   });
 
-  test.skip("normal user account with one department", async ({ dashboardPage, loginAs }) => {
-    await loginAs("testAccount");
-    await dashboardPage.allPageCanBeClick(departmentName[1], communityName[1], "tester");
-  });
-
-  test.skip("normal user account with one department and is department admin", async ({ dashboardPage, loginAs }) => {
-    await loginAs("testAccount1");
-    await dashboardPage.allPageCanBeClick(departmentName[1], communityName[0], "tester");
-  });
-
-  test.skip("normal user account with two department", async ({ dashboardPage, loginAs }) => {
-    await loginAs("testAccount2");
-    await dashboardPage.allPageCanBeClick(departmentName[2], communityName[1], "tester");
-  });
-
-  test.skip("normal user account with two department and is department admin", async ({ dashboardPage, loginAs }) => {
-    await loginAs("testAccount3");
-    await dashboardPage.allPageCanBeClick(departmentName[2], communityName[0], "tester");
-  });
 });

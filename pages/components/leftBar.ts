@@ -88,21 +88,28 @@ export class LeftBar {
     }
 
     async removeTag(tagName: string) {
-        await expect(async () => {
-            await expect(this.page.getByRole('button', { name: new RegExp(`^${tagName} Delete$`) })).toBeVisible();
-            await this.page.getByRole('button', { name: new RegExp(`^${tagName} Delete$`) }).click();
-            await this.page.getByRole('button', { name: 'Yes' }).click();
-            console.log(`PASSED: ${tagName} deleted.`);
+        // await expect(async () => {
+        //     await expect(this.page.getByRole('button', { name: new RegExp(`^${tagName} Delete$`) })).toBeVisible();
+        //     await this.page.getByRole('button', { name: new RegExp(`^${tagName} Delete$`) }).click();
+        //     await this.page.getByRole('button', { name: 'Yes' }).click();
+        //     console.log(`PASSED: ${tagName} deleted.`);
 
-        }).toPass({
-            intervals: [1_000, 2_000, 3_000, 4_000, 5_000],
-            timeout: 120_000
-        });
+        // }).toPass({
+        //     intervals: [1_000, 2_000, 3_000, 4_000, 5_000],
+        //     timeout: 120_000
+        // });
+        await this.page.locator('tr', { hasText: tagName }).locator('button:text("Delete")').click();
+
+        await this.page.getByRole('button', { name: 'Yes' }).click();
+        console.log(`PASSED: ${tagName} deleted.`);
     }
 
+    // Fixme: this is hard code!
     async addAndRemoveTag(tagName: string) {
         await this.addTag(tagName, "Create");
-        await this.removeTag(tagName);
+        // await this.removeTag(tagName);
+        await this.page.getByRole('button', { name: 'testTag Delete' }).getByRole('button').click();
+        await this.page.getByRole('button', { name: 'Yes' }).click();
     };
 
     async navigateToMedia(role: string) {

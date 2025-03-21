@@ -76,6 +76,7 @@ export class DashboardPage {
   async communityCreation(comName: string, comStatus: string) {
     await this.leftBar.navigateToCommunity();
     await this.communityPage.createCommunity(comName, comStatus);
+    console.log(`PASSED: Community ${comName} created.`);
   };
 
   async communityPageCanBeClick(comName: string) {
@@ -93,6 +94,7 @@ export class DashboardPage {
   async communityDeletion(comName: string, status: string) {
     await this.leftBar.navigateToCommunity();
     await this.communityPage.deleteCommunity(comName, status);
+    console.log(`PASSED: Community ${comName} deleted.`)
   };
 
   async createAndDeleteCommunity(comName: string, comStatus: string) {
@@ -103,9 +105,6 @@ export class DashboardPage {
 
   async staffDirectoryPageCanBeClick(deptName: string, role: string) {
     await this.staffDirectory.click();
-
-    // super admin will not be redirect into department's staff directory,
-    // handle searching and clicking on certain department
     if (role === "admin" || role === "superAdmin") {
       await this.page.getByRole('textbox', { name: 'Select Department' }).click();
       await this.page.getByText(deptName).click();
@@ -179,16 +178,17 @@ export class DashboardPage {
     await this.leftBar.navigateToLogout();
   };
 
-  async allPageCanBeClick(departmentName: string, comName: string, role: string) {
+  async allPageCanBeClick({ departmentName, comName, role, createCom }: { departmentName: string, comName: string, role: string, createCom: boolean }) {
     await this.staffDirectoryPageCanBeClick(departmentName, role);
     await this.calendarPageCanBeClick();
 
     await this.departmentPageCanBeClick(departmentName);
 
-    await this.communityPageCanBeClick(comName);
-
-    // This is for production
-    // await this.createAndDeleteCommunity("enzee-testing", "private");
+    if (createCom === true) {
+      await this.createAndDeleteCommunity("enzee-testing", "private");
+    } else {
+      await this.communityPageCanBeClick(comName);
+    };
 
     await this.fileManagementPageCanBeClick();
     await this.mediaPageCanBeClick(role);
