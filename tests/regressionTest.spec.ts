@@ -11,7 +11,7 @@ test.describe("Regression test for production/live", () => {
   test("Production", async ({ dashboardPage, loginAsNew }) => {
     test.setTimeout(120_000);
     await loginAsNew("superAdmin");
-    await dashboardPage.allPageCanBeClick(departmentName[3], communityName[2], "superAdmin");
+    await dashboardPage.allPageCanBeClick(departmentName[3], communityName[1], "superAdmin");
   });
 });
 

@@ -76,7 +76,7 @@ export class DashboardPage {
   async communityCreation(comName: string, comStatus: string) {
     await this.leftBar.navigateToCommunity();
     await this.communityPage.createCommunity(comName, comStatus);
-  }
+  };
 
   async communityPageCanBeClick(comName: string) {
     await this.leftBar.navigateToCommunity();
@@ -93,7 +93,13 @@ export class DashboardPage {
   async communityDeletion(comName: string, status: string) {
     await this.leftBar.navigateToCommunity();
     await this.communityPage.deleteCommunity(comName, status);
-  }
+  };
+
+  async createAndDeleteCommunity(comName: string, comStatus: string) {
+    await this.communityCreation(comName, comStatus);
+    await this.communityPageCanBeClick(comName);
+    await this.communityDeletion(comName, "Yes");
+  };
 
   async staffDirectoryPageCanBeClick(deptName: string, role: string) {
     await this.staffDirectory.click();
@@ -176,19 +182,20 @@ export class DashboardPage {
   async allPageCanBeClick(departmentName: string, comName: string, role: string) {
     await this.staffDirectoryPageCanBeClick(departmentName, role);
     await this.calendarPageCanBeClick();
+
     await this.departmentPageCanBeClick(departmentName);
 
-    // community creation, go inside, deletion
-    await this.communityCreation(comName, "private")
     await this.communityPageCanBeClick(comName);
-    await this.communityDeletion(comName, "Yes");
+
+    // This is for production
+    // await this.createAndDeleteCommunity("enzee-testing", "private");
 
     await this.fileManagementPageCanBeClick();
     await this.mediaPageCanBeClick(role);
-    // await this.linkHomePageCanBeClick();
+    await this.linkHomePageCanBeClick();
     await this.settingsPageCanBeClick(role);
     await this.dashboardHomePageCanBeClick();
     await this.profileCanBeClick();
     await this.logoutDashboardCanBeClick();
   };
-}
+};

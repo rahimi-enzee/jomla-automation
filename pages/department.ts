@@ -57,7 +57,6 @@ export class DepartmentPage {
 
   };
 
-
   async addMember(memberName: string) {
     await this.headerTab.memberPage.click();
     await this.plusMemberBtn.click();

@@ -122,8 +122,9 @@ export class LeftBar {
     async navigateToLinkHome() {
         await this.linkHome.click();
         await expect(this.page.getByRole('heading', { name: 'Systems' })).toBeVisible();
-        await expect(this.page.getByRole('link', { name: 'Dashboard Tourism Malaysia' })).toBeVisible();
-        await expect(this.page.getByRole('link', { name: 'Sistem Keluar Pejabat favicon' })).toBeVisible();
+        // await expect(this.page.getByRole('link', { name: 'Dashboard Tourism Malaysia' })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: 'e-Library favicon e-Library' })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: 'Sistem Kehadiran Pejabat favicon' })).toBeVisible();
 
         await expect(this.page.getByRole('heading', { name: 'Official File' })).toBeVisible();
         await expect(this.page.getByRole('link', { name: 'Arahan Kewangan Dan' })).toBeVisible();
